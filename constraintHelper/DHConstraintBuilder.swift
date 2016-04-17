@@ -1,6 +1,6 @@
 //
-//  ConstraintHelper.swift
-//  constraintHelper
+//  DHConstraintBuilder.swift
+//  DHConstraintBuilder
 //
 //  Created by Derrick  Ho on 4/16/16.
 //  Copyright © 2016 Derrick  Ho. All rights reserved.
@@ -17,41 +17,31 @@ private func +<KEY,VALUE>(a: [KEY:VALUE], b: [KEY:VALUE]) -> [KEY:VALUE] {
 }
 
 infix operator ^-^ { associativity left precedence 140 }
-func ^-^<T,U>(lhs: T, rhs: U) -> ConstraintHelper {
+func ^-^<T,U>(lhs: T, rhs: U) -> DHConstraintBuilder {
 	return "\(lhs)-\(rhs)"
 }
 
-//prefix operator |- {}
-//prefix func |-<T>(rhs: T) -> ConstraintHelper {
-//	return "|-\(rhs)"
-//}
-
 infix operator |-^ { associativity left }
-func |-^<T>(lhs: (Void), rhs: T) -> ConstraintHelper {
+func |-^<T>(lhs: (Void), rhs: T) -> DHConstraintBuilder {
 	return "|-\(rhs)"
 }
 
-//postfix operator -| {}
-//postfix func -|<T>(lhs: T) -> ConstraintHelper {
-//	return "\(lhs)-|"
-//}
-
 infix operator ^-| { associativity left }
-func ^-|<T>(lhs: T, rhs: (Void)) -> ConstraintHelper {
+func ^-|<T>(lhs: T, rhs: (Void)) -> DHConstraintBuilder {
 	return "\(lhs)-|"
 }
 
 infix operator ^>=^ { associativity left precedence 140 }
-func ^>=^<T>(lhs: ConstraintHelper, rhs: T) -> ConstraintHelper {
+func ^>=^<T>(lhs: DHConstraintBuilder, rhs: T) -> DHConstraintBuilder {
 	return "\(lhs)->=\(rhs)"
 }
 
 infix operator ^<=^ { associativity left precedence 140 }
-func ^<=^<T>(lhs: ConstraintHelper, rhs: T) -> ConstraintHelper {
+func ^<=^<T>(lhs: DHConstraintBuilder, rhs: T) -> DHConstraintBuilder {
 	return "\(lhs)-<=\(rhs)"
 }
 
-struct ConstraintHelper: StringInterpolationConvertible {
+struct DHConstraintBuilder: StringInterpolationConvertible {
 	
 	let constraintString: String
 	var options: NSLayoutFormatOptions = NSLayoutFormatOptions(rawValue: 0)
@@ -62,7 +52,7 @@ struct ConstraintHelper: StringInterpolationConvertible {
 	}
 	
 	/// every segment created by init<T>(stringInterpolationSegment expr: T) will come here as an array of Segments.
-	init(stringInterpolation strings: ConstraintHelper...) {
+	init(stringInterpolation strings: DHConstraintBuilder...) {
 		constraintString = strings.map({ $0.constraintString }).reduce("", combine: +)
 		viewDict = strings.map({ $0.viewDict }).reduce([:], combine:+)
 		metricDict = strings.map({ $0.metricDict }).reduce([:], combine:+)
@@ -72,7 +62,7 @@ struct ConstraintHelper: StringInterpolationConvertible {
 	init<T>(stringInterpolationSegment expr: T) {
 		let uuid = __.count
 		__.count = __.count &+ 1
-		if let ch = expr as? ConstraintHelper {
+		if let ch = expr as? DHConstraintBuilder {
 			constraintString = ch.constraintString
 			options = ch.options
 			metricDict = ch.metricDict
@@ -111,24 +101,23 @@ struct ConstraintHelper: StringInterpolationConvertible {
 }
 
 extension UIView {
-	func addConstraints_H(constraintHelper: ConstraintHelper) {
-		addConstraints("H:\(constraintHelper)")
+	func addConstraints_H(constraints: DHConstraintBuilder) {
+		addConstraints("H:\(constraints)")
 	}
-	func addConstraints_V(constraintHelper: ConstraintHelper) {
-		addConstraints("V:\(constraintHelper)")
+	func addConstraints_V(constraints: DHConstraintBuilder) {
+		addConstraints("V:\(constraints)")
 	}
-	func addConstraints(constraintsHelper: ConstraintHelper) {
-		constraintsHelper.viewDict.forEach({
+	func addConstraints(c: DHConstraintBuilder) {
+		c.viewDict.forEach({
 			$1.translatesAutoresizingMaskIntoConstraints = false
 			if self.subviews.contains($1) == false {
 				self.addSubview($1)
 			}
 		})
-		addConstraints(NSLayoutConstraint.constraintsWithVisualFormat(constraintsHelper.constraintString,
-			options: constraintsHelper.options,
-			metrics: constraintsHelper.metricDict,
-			views: constraintsHelper.viewDict))
-		print(constraintsHelper)
+		addConstraints(NSLayoutConstraint.constraintsWithVisualFormat(c.constraintString,
+			options: c.options,
+			metrics: c.metricDict,
+			views: c.viewDict))
 	}
 }
 
