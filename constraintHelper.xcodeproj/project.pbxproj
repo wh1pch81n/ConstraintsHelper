@@ -12,13 +12,13 @@
 		2F5FB24E1CC449080045E6DA /* DHConstraintBuilderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F5FB24D1CC449080045E6DA /* DHConstraintBuilderTests.swift */; };
 		2F5FB2521CC449080045E6DA /* DHConstraintBuilder.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2F5FB23D1CC449080045E6DA /* DHConstraintBuilder.framework */; };
 		2F5FB2531CC449080045E6DA /* DHConstraintBuilder.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 2F5FB23D1CC449080045E6DA /* DHConstraintBuilder.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		2F5FB25C1CC44B350045E6DA /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FC4ACAE1CC336EF00B35050 /* ViewController.swift */; };
+		2F5FB25D1CC44B3A0045E6DA /* DHConstraintBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FC4ACCC1CC3370700B35050 /* DHConstraintBuilder.swift */; };
 		2FC4ACAD1CC336EF00B35050 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FC4ACAC1CC336EF00B35050 /* AppDelegate.swift */; };
-		2FC4ACAF1CC336EF00B35050 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FC4ACAE1CC336EF00B35050 /* ViewController.swift */; };
 		2FC4ACB21CC336EF00B35050 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2FC4ACB01CC336EF00B35050 /* Main.storyboard */; };
 		2FC4ACB41CC336EF00B35050 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2FC4ACB31CC336EF00B35050 /* Assets.xcassets */; };
 		2FC4ACB71CC336EF00B35050 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2FC4ACB51CC336EF00B35050 /* LaunchScreen.storyboard */; };
 		2FC4ACC21CC336EF00B35050 /* constraintHelperTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FC4ACC11CC336EF00B35050 /* constraintHelperTests.swift */; };
-		2FC4ACCD1CC3370700B35050 /* DHConstraintBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FC4ACCC1CC3370700B35050 /* DHConstraintBuilder.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -357,6 +357,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2F5FB25D1CC44B3A0045E6DA /* DHConstraintBuilder.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -372,8 +373,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2FC4ACAF1CC336EF00B35050 /* ViewController.swift in Sources */,
-				2FC4ACCD1CC3370700B35050 /* DHConstraintBuilder.swift in Sources */,
+				2F5FB25C1CC44B350045E6DA /* ViewController.swift in Sources */,
 				2FC4ACAD1CC336EF00B35050 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -580,6 +580,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				EMBEDDED_CONTENT_CONTAINS_SWIFT = YES;
 				INFOPLIST_FILE = constraintHelper/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.dnthome.constraintHelper;
@@ -591,6 +592,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				EMBEDDED_CONTENT_CONTAINS_SWIFT = YES;
 				INFOPLIST_FILE = constraintHelper/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.dnthome.constraintHelper;

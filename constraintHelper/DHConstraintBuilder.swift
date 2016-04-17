@@ -17,31 +17,31 @@ private func +<KEY,VALUE>(a: [KEY:VALUE], b: [KEY:VALUE]) -> [KEY:VALUE] {
 }
 
 infix operator ^-^ { associativity left precedence 140 }
-func ^-^<T,U>(lhs: T, rhs: U) -> DHConstraintBuilder {
+public func ^-^<T,U>(lhs: T, rhs: U) -> DHConstraintBuilder {
 	return "\(lhs)-\(rhs)"
 }
 
 infix operator |-^ { associativity left }
-func |-^<T>(lhs: (Void), rhs: T) -> DHConstraintBuilder {
+public func |-^<T>(lhs: (Void), rhs: T) -> DHConstraintBuilder {
 	return "|-\(rhs)"
 }
 
 infix operator ^-| { associativity left }
-func ^-|<T>(lhs: T, rhs: (Void)) -> DHConstraintBuilder {
+public func ^-|<T>(lhs: T, rhs: (Void)) -> DHConstraintBuilder {
 	return "\(lhs)-|"
 }
 
 infix operator ^>=^ { associativity left precedence 140 }
-func ^>=^<T>(lhs: DHConstraintBuilder, rhs: T) -> DHConstraintBuilder {
+public func ^>=^<T>(lhs: DHConstraintBuilder, rhs: T) -> DHConstraintBuilder {
 	return "\(lhs)->=\(rhs)"
 }
 
 infix operator ^<=^ { associativity left precedence 140 }
-func ^<=^<T>(lhs: DHConstraintBuilder, rhs: T) -> DHConstraintBuilder {
+public func ^<=^<T>(lhs: DHConstraintBuilder, rhs: T) -> DHConstraintBuilder {
 	return "\(lhs)-<=\(rhs)"
 }
 
-struct DHConstraintBuilder: StringInterpolationConvertible {
+public struct DHConstraintBuilder: StringInterpolationConvertible {
 	
 	let constraintString: String
 	var options: NSLayoutFormatOptions = NSLayoutFormatOptions(rawValue: 0)
@@ -52,14 +52,14 @@ struct DHConstraintBuilder: StringInterpolationConvertible {
 	}
 	
 	/// every segment created by init<T>(stringInterpolationSegment expr: T) will come here as an array of Segments.
-	init(stringInterpolation strings: DHConstraintBuilder...) {
+	public init(stringInterpolation strings: DHConstraintBuilder...) {
 		constraintString = strings.map({ $0.constraintString }).reduce("", combine: +)
 		viewDict = strings.map({ $0.viewDict }).reduce([:], combine:+)
 		metricDict = strings.map({ $0.metricDict }).reduce([:], combine:+)
 	}
 	
 	/// the string literal is broken up into intervals of all string and \(..) which are called segments
-	init<T>(stringInterpolationSegment expr: T) {
+	public init<T>(stringInterpolationSegment expr: T) {
 		let uuid = __.count
 		__.count = __.count &+ 1
 		if let ch = expr as? DHConstraintBuilder {
@@ -77,7 +77,7 @@ struct DHConstraintBuilder: StringInterpolationConvertible {
 		}
 	}
 	
-	init(_ view: UIView? = nil, length: Int? = nil, priority: Int = 1000) {
+	public init(_ view: UIView? = nil, length: Int? = nil, priority: Int = 1000) {
 		let uuid = __.count
 		__.count = __.count &+ 1
 		view?.translatesAutoresizingMaskIntoConstraints = false
@@ -101,13 +101,15 @@ struct DHConstraintBuilder: StringInterpolationConvertible {
 }
 
 extension UIView {
-	func addConstraints_H(constraints: DHConstraintBuilder) {
+	
+	public func addConstraints_H(constraints: DHConstraintBuilder) {
 		addConstraints("H:\(constraints)")
 	}
-	func addConstraints_V(constraints: DHConstraintBuilder) {
+	
+	public func addConstraints_V(constraints: DHConstraintBuilder) {
 		addConstraints("V:\(constraints)")
 	}
-	func addConstraints(c: DHConstraintBuilder) {
+	public func addConstraints(c: DHConstraintBuilder) {
 		c.viewDict.forEach({
 			$1.translatesAutoresizingMaskIntoConstraints = false
 			if self.subviews.contains($1) == false {
