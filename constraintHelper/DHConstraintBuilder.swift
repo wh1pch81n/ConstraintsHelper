@@ -102,11 +102,11 @@ public struct DHConstraintBuilder: StringInterpolationConvertible {
 
 extension UIView {
 	
-	public func addConstraints_H(constraints: DHConstraintBuilder) {
+	public func addConstraints_H_(constraints: DHConstraintBuilder) {
 		addConstraints("H:\(constraints)")
 	}
 	
-	public func addConstraints_V(constraints: DHConstraintBuilder) {
+	public func addConstraints_V_(constraints: DHConstraintBuilder) {
 		addConstraints("V:\(constraints)")
 	}
 	public func addConstraints(c: DHConstraintBuilder) {
