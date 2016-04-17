@@ -32,11 +32,11 @@ class ViewController: UIViewController {
 		let v4 = UIView()
 		v4.backgroundColor = .orangeColor()
 		
-		v1.addConstraints_H(() |- ConstraintHelper(v3) - 5 - ConstraintHelper(v4, length: 5) -| ())
-		v1.addConstraints_V(ConstraintHelper(v3, length: 20) -| ())
-		v1.addConstraints_V(ConstraintHelper(v4, length: 40) - 0 -| ())
+		v1.addConstraints_H(() |-^ ConstraintHelper(v3) ^-^ 5 ^-^ ConstraintHelper(v4, length: 5) ^-| ())
+		v1.addConstraints_V(ConstraintHelper(v3, length: 20) ^-| ())
+		v1.addConstraints_V(ConstraintHelper(v4, length: 40) ^-^ 0 ^-| ())
 		print("=======")
-		let ch: ConstraintHelper = ConstraintHelper(v2) ->= 8 - ConstraintHelper(v3, length: 5)
+		let ch: ConstraintHelper = ConstraintHelper(v2) ^>=^ 8 ^-^ ConstraintHelper(v3, length: 5)
 		print(ch)
 	}
 }

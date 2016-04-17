@@ -16,7 +16,8 @@ private func +<KEY,VALUE>(a: [KEY:VALUE], b: [KEY:VALUE]) -> [KEY:VALUE] {
 	return d
 }
 
-func -<T>(lhs: ConstraintHelper, rhs: T) -> ConstraintHelper {
+infix operator ^-^ { associativity left precedence 140 }
+func ^-^<T,U>(lhs: T, rhs: U) -> ConstraintHelper {
 	return "\(lhs)-\(rhs)"
 }
 
@@ -25,8 +26,8 @@ func -<T>(lhs: ConstraintHelper, rhs: T) -> ConstraintHelper {
 //	return "|-\(rhs)"
 //}
 
-infix operator |- { associativity left }
-func |-<T>(lhs: (Void), rhs: T) -> ConstraintHelper {
+infix operator |-^ { associativity left }
+func |-^<T>(lhs: (Void), rhs: T) -> ConstraintHelper {
 	return "|-\(rhs)"
 }
 
@@ -35,18 +36,18 @@ func |-<T>(lhs: (Void), rhs: T) -> ConstraintHelper {
 //	return "\(lhs)-|"
 //}
 
-infix operator -| { associativity left }
-func -|<T>(lhs: T, rhs: (Void)) -> ConstraintHelper {
+infix operator ^-| { associativity left }
+func ^-|<T>(lhs: T, rhs: (Void)) -> ConstraintHelper {
 	return "\(lhs)-|"
 }
 
-infix operator ->= { associativity left precedence 140 }
-func ->=<T>(lhs: ConstraintHelper, rhs: T) -> ConstraintHelper {
+infix operator ^>=^ { associativity left precedence 140 }
+func ^>=^<T>(lhs: ConstraintHelper, rhs: T) -> ConstraintHelper {
 	return "\(lhs)->=\(rhs)"
 }
 
-infix operator -<= { associativity left precedence 140 }
-func -<=<T>(lhs: ConstraintHelper, rhs: T) -> ConstraintHelper {
+infix operator ^<=^ { associativity left precedence 140 }
+func ^<=^<T>(lhs: ConstraintHelper, rhs: T) -> ConstraintHelper {
 	return "\(lhs)-<=\(rhs)"
 }
 
