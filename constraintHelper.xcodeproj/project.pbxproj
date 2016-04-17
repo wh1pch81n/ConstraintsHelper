@@ -13,6 +13,7 @@
 		2FC4ACB41CC336EF00B35050 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2FC4ACB31CC336EF00B35050 /* Assets.xcassets */; };
 		2FC4ACB71CC336EF00B35050 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2FC4ACB51CC336EF00B35050 /* LaunchScreen.storyboard */; };
 		2FC4ACC21CC336EF00B35050 /* constraintHelperTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FC4ACC11CC336EF00B35050 /* constraintHelperTests.swift */; };
+		2FC4ACCD1CC3370700B35050 /* ConstraintHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FC4ACCC1CC3370700B35050 /* ConstraintHelper.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -36,6 +37,7 @@
 		2FC4ACBD1CC336EF00B35050 /* constraintHelperTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = constraintHelperTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		2FC4ACC11CC336EF00B35050 /* constraintHelperTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = constraintHelperTests.swift; sourceTree = "<group>"; };
 		2FC4ACC31CC336EF00B35050 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		2FC4ACCC1CC3370700B35050 /* ConstraintHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConstraintHelper.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -79,6 +81,7 @@
 			children = (
 				2FC4ACAC1CC336EF00B35050 /* AppDelegate.swift */,
 				2FC4ACAE1CC336EF00B35050 /* ViewController.swift */,
+				2FC4ACCC1CC3370700B35050 /* ConstraintHelper.swift */,
 				2FC4ACB01CC336EF00B35050 /* Main.storyboard */,
 				2FC4ACB31CC336EF00B35050 /* Assets.xcassets */,
 				2FC4ACB51CC336EF00B35050 /* LaunchScreen.storyboard */,
@@ -198,6 +201,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				2FC4ACAF1CC336EF00B35050 /* ViewController.swift in Sources */,
+				2FC4ACCD1CC3370700B35050 /* ConstraintHelper.swift in Sources */,
 				2FC4ACAD1CC336EF00B35050 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
