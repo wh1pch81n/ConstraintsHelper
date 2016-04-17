@@ -9,27 +9,35 @@
 import UIKit
 
 class ViewController: UIViewController {
-	@IBOutlet var v2: UIView!
 	override func viewDidLoad() {
 		super.viewDidLoad()
-		// Do any additional setup after loading the view, typically from a nib.
-		let v = UIView(frame: CGRect(x: 0, y: 0, width: 10, height: 10))
-		v.backgroundColor = .redColor()
-		v2.addSubview(v)
-		let ch: ConstraintHelper = "H:|-\(ConstraintHelper(length: 8))-\(ConstraintHelper(v, length: 100))"
-//		let cv: ConstraintHelper = "V:|-10-[\(ConstraintHelper(v))]-\(8)-|"
-		v2.addConstraints(ch)
-//		v2.addConstraints(cv)
-		v2.addConstraints("V:|-10-\(v)-\(8)-|")
-		v2.addConstraints("V:\(ConstraintHelper(v2, length: 300))")
-//v2.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat(ch.constraintString, options: ch.options, metrics: ch., views: <#T##[String : AnyObject]#>))
+		let v0 = UIView()
+		v0.backgroundColor = .redColor()
+		let v1 = UIView()
+		v1.backgroundColor = .greenColor()
+		let v2 = UIView()
+		v2.backgroundColor = .blueColor()
+		
+		view.addConstraints_H("|-\(v0)-|")
+		view.addConstraints_V("|-\(v0)-|")
+		
+		v0.addConstraints_H("|-\(v1)-|")
+		v0.addConstraints_V("|-\(v1)-|")
+		
+		v1.addConstraints_H("|-10-\(ConstraintHelper(v2, length: 50))")
+		v1.addConstraints_V("|-\(30)-\(ConstraintHelper(v2, length: 60))")
+		
+		let v3 = UIView()
+		v3.backgroundColor = .yellowColor()
+		let v4 = UIView()
+		v4.backgroundColor = .orangeColor()
+		
+		v1.addConstraints_H(() |- ConstraintHelper(v3) - 5 - ConstraintHelper(v4, length: 5) -| ())
+		v1.addConstraints_V(ConstraintHelper(v3, length: 20) -| ())
+		v1.addConstraints_V(ConstraintHelper(v4, length: 40) - 0 -| ())
+		print("=======")
+		let ch: ConstraintHelper = ConstraintHelper(v2) ->= 8 - ConstraintHelper(v3, length: 5)
+		print(ch)
 	}
-
-	override func didReceiveMemoryWarning() {
-		super.didReceiveMemoryWarning()
-		// Dispose of any resources that can be recreated.
-	}
-
-
 }
 
