@@ -16,6 +16,7 @@ private func +<KEY,VALUE>(a: [KEY:VALUE], b: [KEY:VALUE]) -> [KEY:VALUE] {
 	return d
 }
 
+/** Short hand for linking two DHConstraintBuilder Objects */
 infix operator ^-^ { associativity left precedence 140 }
 public func ^-^<T,U>(lhs: T, rhs: U) -> DHConstraintBuilder {
 	return "\(lhs)-\(rhs)"
