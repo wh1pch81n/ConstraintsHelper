@@ -17,26 +17,33 @@ private func +<KEY,VALUE>(a: [KEY:VALUE], b: [KEY:VALUE]) -> [KEY:VALUE] {
 }
 
 infix operator ^-^ { associativity left precedence 140 }
+infix operator |-^ { associativity left }
+infix operator ^-| { associativity left }
+infix operator ^>=^ { associativity left precedence 140 }
+infix operator ^<=^ { associativity left precedence 140 }
+
+/** Short hand for linking two DHConstraintBuilder Objects */
 public func ^-^<T,U>(lhs: T, rhs: U) -> DHConstraintBuilder {
 	return "\(lhs)-\(rhs)"
 }
 
-infix operator |-^ { associativity left }
+/** Short hand for linking one DHConstraintBuilder to the top if vertical or to the left if horizontal*/
 public func |-^<T>(lhs: (Void), rhs: T) -> DHConstraintBuilder {
 	return "|-\(rhs)"
 }
 
-infix operator ^-| { associativity left }
+/** Short hand for linking one DHConstraintBuilder to the bottom if vertical or to the right if horizontal*/
 public func ^-|<T>(lhs: T, rhs: (Void)) -> DHConstraintBuilder {
 	return "\(lhs)-|"
 }
 
-infix operator ^>=^ { associativity left precedence 140 }
+/** Short hand for linking one DHConstraintBuilder Object with a greather or equal to length */
 public func ^>=^<T>(lhs: DHConstraintBuilder, rhs: T) -> DHConstraintBuilder {
 	return "\(lhs)->=\(rhs)"
 }
 
-infix operator ^<=^ { associativity left precedence 140 }
+/** Short hand for linking one DHConstraintBuilder Object with a less than or equal to length */
+
 public func ^<=^<T>(lhs: DHConstraintBuilder, rhs: T) -> DHConstraintBuilder {
 	return "\(lhs)-<=\(rhs)"
 }
