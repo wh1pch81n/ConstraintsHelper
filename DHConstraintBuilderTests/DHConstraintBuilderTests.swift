@@ -22,8 +22,33 @@ class DHConstraintBuilderTests: XCTestCase {
     }
     
     func testExample() {
-        // This is an example of a functional test case.
-        // Use XCTAssert and related functions to verify your tests produce the correct results.
+
+		// Single View Tests
+		let baseCase: DHConstraintBuilder = "\(DHConstraintBuilder(UIView()))"
+		let baseCase_Length: DHConstraintBuilder = "\(DHConstraintBuilder(UIView(), length: 5))"
+		
+		let simplifiedCase: DHConstraintBuilder = "\(UIView())"
+		
+		// Single View With Super view
+		let baseCase_superview: DHConstraintBuilder = "|-\(DHConstraintBuilder(UIView()))-|"
+		let baseCase_Length_superview: DHConstraintBuilder = "|-\(DHConstraintBuilder(UIView(), length: 5))-|"
+		
+		let simplifiedCase_superview: DHConstraintBuilder = "|-\(UIView())-|"
+		let shorthandCase_superview: DHConstraintBuilder = () |-^ UIView() ^-| ()
+		let shorthandCase_superview_viewlength: DHConstraintBuilder = () |-^ DHConstraintBuilder(UIView(), length: 15) ^-| ()
+		
+		// Joining two views
+		let baseCase_join: DHConstraintBuilder = "\(DHConstraintBuilder(UIView()))-\(DHConstraintBuilder(UIView()))"
+		let baseCase_join_length: DHConstraintBuilder = "\(DHConstraintBuilder(UIView(), length: 50))-\(DHConstraintBuilder(UIView(), length: 40))"
+		let simplified_join: DHConstraintBuilder = "\(UIView())-\(UIView())"
+		let shorthandCase_join:DHConstraintBuilder = UIView() ^-^ UIView()
+		
+		// Joining two views_custom gap
+		let baseCase_join_gap: DHConstraintBuilder = "\(DHConstraintBuilder(UIView()))-123-\(DHConstraintBuilder(UIView()))"
+		let baseCase_join_length_gap: DHConstraintBuilder = "\(DHConstraintBuilder(UIView(), length: 50))-123-\(DHConstraintBuilder(UIView(), length: 40))"
+		let simplified_join_gap: DHConstraintBuilder = "\(UIView())-123-\(UIView())"
+		let shorthandCase_join_gap:DHConstraintBuilder = UIView() ^-^ 123 ^-^ UIView()
+		
     }
     
     func testPerformanceExample() {

@@ -60,14 +60,14 @@ public struct DHConstraintBuilder: StringInterpolationConvertible {
 	
 	/// the string literal is broken up into intervals of all string and \(..) which are called segments
 	public init<T>(stringInterpolationSegment expr: T) {
-		let uuid = __.count
-		__.count = __.count &+ 1
 		if let ch = expr as? DHConstraintBuilder {
 			constraintString = ch.constraintString
 			options = ch.options
 			metricDict = ch.metricDict
 			viewDict = ch.viewDict
 		} else if let v = expr as? UIView {
+			let uuid = __.count
+			__.count = __.count &+ 1
 			viewDict = ["view_\(uuid)" : v]
 			constraintString = "[view_\(uuid)]"
 		} else if let s = expr as? String {
