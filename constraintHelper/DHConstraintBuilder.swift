@@ -119,7 +119,7 @@ extension UIView {
 	public func addConstraints(c: DHConstraintBuilder) {
 		c.viewDict.forEach({
 			$1.translatesAutoresizingMaskIntoConstraints = false
-			if self.subviews.contains($1) == false {
+			if self.subviews.contains($1) == false && self != $1 {
 				self.addSubview($1)
 			}
 		})
