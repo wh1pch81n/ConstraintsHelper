@@ -1,10 +1,26 @@
-//
-//  DHConstraintBuilder.swift
-//  DHConstraintBuilder
-//
-//  Created by Derrick  Ho on 4/16/16.
-//  Copyright © 2016 Derrick  Ho. All rights reserved.
-//
+/**
+MIT License
+
+Copyright (c) 2016 Derrick Ho
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+*/
 
 import UIKit
 
@@ -22,28 +38,75 @@ infix operator ^-| { associativity left }
 infix operator ^>=^ { associativity left precedence 140 }
 infix operator ^<=^ { associativity left precedence 140 }
 
-/** Short hand for linking two DHConstraintBuilder Objects */
+/** 
+Short hand for linking two DHConstraintBuilder Objects 
+
+```
+let view0 = UIView()
+let view1 = UIView()
+let view2 = UIView()
+view0.addConstraints(view1 ^-^ view2) // view1 adjecent to view2
+
+let view3 = UIView()
+let view4 = UIView()
+let view5 = UIView()
+view3.addConstraints(view4 ^-^ 8 ^-^ view5) // view1 is 8 units away from view2
+```
+*/
 public func ^-^<T,U>(lhs: T, rhs: U) -> DHConstraintBuilder {
 	return "\(lhs)-\(rhs)"
 }
 
-/** Short hand for linking one DHConstraintBuilder to the top if vertical or to the left if horizontal*/
+/**
+Short hand for linking one DHConstraintBuilder to the top if vertical or to the left if horizontal
+
+```
+let view1 = UIView()
+let view2 = UIView()
+view1.addConstraints(() |-^ view2)
+```
+*/
 public func |-^<T>(lhs: (Void), rhs: T) -> DHConstraintBuilder {
 	return "|-\(rhs)"
 }
 
-/** Short hand for linking one DHConstraintBuilder to the bottom if vertical or to the right if horizontal*/
+/**
+Short hand for linking one DHConstraintBuilder to the bottom if vertical or to the right if horizontal
+
+```
+let view1 = UIView()
+let view2 = UIView()
+view1.addConstraints(view2 ^-| ())
+```
+*/
 public func ^-|<T>(lhs: T, rhs: (Void)) -> DHConstraintBuilder {
 	return "\(lhs)-|"
 }
 
-/** Short hand for linking one DHConstraintBuilder Object with a greather or equal to length */
+/** 
+Short hand for linking 2 DHConstraintBuilder objects with a gap length greather or equal to specified number
+
+```
+let view0 = UIView()
+let view1 = UIView()
+let view2 = UIView()
+view0.addConstraints(view1 ^>=^ 8 ^-^ view2) // view1 is >=8 units away from view2
+```
+*/
 public func ^>=^<T>(lhs: DHConstraintBuilder, rhs: T) -> DHConstraintBuilder {
 	return "\(lhs)->=\(rhs)"
 }
 
-/** Short hand for linking one DHConstraintBuilder Object with a less than or equal to length */
+/** 
+Short hand for linking 2 DHConstraintBuilder objects with a gap length less than or equal to specified number
 
+```
+let view0 = UIView()
+let view1 = UIView()
+let view2 = UIView()
+view0.addConstraints(view1 ^<=^ 8 ^-^ view2) // view1 is <=8 units away from view2
+```
+*/
 public func ^<=^<T>(lhs: DHConstraintBuilder, rhs: T) -> DHConstraintBuilder {
 	return "\(lhs)-<=\(rhs)"
 }
@@ -84,6 +147,15 @@ public struct DHConstraintBuilder: StringInterpolationConvertible {
 		}
 	}
 	
+	/**
+	Creates a DHConstraintBuilder object 
+	
+	- parameters:
+		- view: a view
+		- length: a length of a view or gap
+		- priority: priority of a constraint where the range is from 1 to 1000.  Default value is 1000
+	
+	*/
 	public init(_ view: UIView? = nil, length: Int? = nil, priority: Int = 1000) {
 		let uuid = __.count
 		__.count = __.count &+ 1
@@ -108,14 +180,32 @@ public struct DHConstraintBuilder: StringInterpolationConvertible {
 }
 
 extension UIView {
+	/**
+	A helper method that adds constraints horizontally.  Automatically sets __translatesAutoresizingMaskIntoConstraints__ to __false__ and adds any views specified in the DHConstraintBuilder if needed.
 	
+	- Parameters:
+		- constraints: The DHConstraintBuilder object.
+	*/
 	public func addConstraints_H(constraints: DHConstraintBuilder) {
 		addConstraints("H:\(constraints)")
 	}
 	
+	/**
+	A helper method that adds constraints vertically.  Automatically sets __translatesAutoresizingMaskIntoConstraints__ to __false__ and adds any views specified in the DHConstraintBuilder if needed.
+	
+	- Parameters:
+		- constraints: The DHConstraintBuilder object.
+	*/
 	public func addConstraints_V(constraints: DHConstraintBuilder) {
 		addConstraints("V:\(constraints)")
 	}
+	
+	/**
+	A helper method that adds constraints.  Automatically sets __translatesAutoresizingMaskIntoConstraints__ to __false__ and adds any views specified in the DHConstraintBuilder if needed.
+	
+	- Parameters:
+		- constraints: The DHConstraintBuilder object.
+	*/
 	public func addConstraints(c: DHConstraintBuilder) {
 		c.viewDict.forEach({
 			$1.translatesAutoresizingMaskIntoConstraints = false
