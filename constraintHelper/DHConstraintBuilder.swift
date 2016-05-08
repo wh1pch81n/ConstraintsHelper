@@ -51,7 +51,7 @@ public func ^<=^<T>(lhs: DHConstraintBuilder, rhs: T) -> DHConstraintBuilder {
 public struct DHConstraintBuilder: StringInterpolationConvertible {
 	
 	let constraintString: String
-	var options: NSLayoutFormatOptions = NSLayoutFormatOptions(rawValue: 0)
+	public var options: NSLayoutFormatOptions = NSLayoutFormatOptions(rawValue: 0)
 	private var metricDict = [String : Int]()
 	private var viewDict = [String : UIView]()
 	private struct __ {
