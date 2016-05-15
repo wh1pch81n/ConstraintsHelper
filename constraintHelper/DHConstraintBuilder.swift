@@ -170,7 +170,7 @@ public struct DHConstraintBuilder: StringInterpolationConvertible {
 			constraintString = "[view_\(uuid)]"
 		case let (nil, l?):
 			metricDict = ["metric_\(uuid)" : l]
-			constraintString = "(metric_\(uuid)@\(priority))"
+			constraintString = "metric_\(uuid)@\(priority)"
 		case (nil, nil):
 			assertionFailure("at least view or length must be added.  Having both non existent is not allowed")
 			constraintString = ""
