@@ -1,12 +1,13 @@
-Installation
+## Installation 
 
+### Carthage
 ```
-github "wh1pch81n/DHConstraintBuilder" "1.0"
+github "wh1pch81n/DHConstraintBuilder" "1.0.0"
 ```
 
-Coding examples
+## Coding examples
 
-```
+```swift
 // old way
 let view = UIView()
 let button = UIButton()
