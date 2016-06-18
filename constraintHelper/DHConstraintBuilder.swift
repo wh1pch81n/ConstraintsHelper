@@ -159,7 +159,7 @@ public struct DHConstraintBuilder: StringInterpolationConvertible {
 	public init(_ view: UIView? = nil, length: Int? = nil, priority: Int = 1000) {
 		let uuid = __.count
 		__.count = __.count &+ 1
-		view?.translatesAutoresizingMaskIntoConstraints = false
+		//view?.translatesAutoresizingMaskIntoConstraints = false
 		switch (view, length) {
 		case let (v?, l?):
 			viewDict = ["view_\(uuid)" : v]
@@ -177,27 +177,44 @@ public struct DHConstraintBuilder: StringInterpolationConvertible {
 		}
 	}
 	
+	public init(_ view: UIView, lengthRelation: DHConstraintRelation = .Equal, lengthRelativeToView: UIView, priority: Int = 1000) {
+		let uuid = __.count
+		__.count = __.count &+ 1
+		let uuid2 = __.count
+		__.count = __.count &+ 1
+		viewDict = [
+			"view_\(uuid)" : view,
+			"viewR_\(uuid2)" : lengthRelativeToView
+		]
+		constraintString = "[view_\(uuid)(\(lengthRelation.rawValue)viewR_\(uuid2)@\(priority))]"
+	}
+	
+}
+
+public enum DHConstraintRelation: String {
+	case Equal = "=="
+	case GreaterThanOrEqual = ">="
+	case LessThanOrEqual = "<="
+}
+
+public enum DHConstraintDirection: String {
+	case V = "V:"
+	case H = "H:"
+	static var Vertical: DHConstraintDirection = .V
+	static var Horizontal: DHConstraintDirection = .H
 }
 
 extension UIView {
-	/**
-	A helper method that adds constraints horizontally.  Automatically sets __translatesAutoresizingMaskIntoConstraints__ to __false__ and adds any views specified in the DHConstraintBuilder if needed.
-	
-	- Parameters:
-		- constraints: The DHConstraintBuilder object.
-	*/
-	public func addConstraints_H(constraints: DHConstraintBuilder) {
-		addConstraints("H:\(constraints)")
-	}
 	
 	/**
-	A helper method that adds constraints vertically.  Automatically sets __translatesAutoresizingMaskIntoConstraints__ to __false__ and adds any views specified in the DHConstraintBuilder if needed.
+	A helper method that adds constraints vertically or horizontally.  Automatically sets __translatesAutoresizingMaskIntoConstraints__ to __false__ and adds any views specified in the DHConstraintBuilder if needed.
 	
 	- Parameters:
+		- direction: Direction of the constraint.  Either vertical or horizontal. horizontal
 		- constraints: The DHConstraintBuilder object.
 	*/
-	public func addConstraints_V(constraints: DHConstraintBuilder) {
-		addConstraints("V:\(constraints)")
+	public func addConstraints(_ direction: DHConstraintDirection, _ constraints: DHConstraintBuilder) {
+		addConstraints("\(direction.rawValue)\(constraints)")
 	}
 	
 	/**
@@ -205,10 +222,17 @@ extension UIView {
 	
 	- Parameters:
 		- constraints: The DHConstraintBuilder object.
+		- setAllViewsTranslatesAutoresizingMaskIntoConstraintsToFalse: By default this value is true.  If this value is true, then every view specified in the DHConstraintBuilder constraintString will have it's __translatesAutoresizingMaskIntoConstraints__ property set to false.  If this value is false then the value of each view's __translatesAutoresizingMaskIntoConstraints__ will be untouched.
 	*/
-	public func addConstraints(c: DHConstraintBuilder) {
+	public func addConstraints(c: DHConstraintBuilder, setAllViewsTranslatesAutoresizingMaskIntoConstraintsToFalse: Bool = true) {
+		print(c.constraintString)
+		print(c.metricDict)
+		print(c.viewDict)
 		c.viewDict.forEach({
-			$1.translatesAutoresizingMaskIntoConstraints = false
+			if setAllViewsTranslatesAutoresizingMaskIntoConstraintsToFalse {
+				$1.translatesAutoresizingMaskIntoConstraints = false
+			}
+			
 			if self.subviews.contains($1) == false && self != $1 {
 				self.addSubview($1)
 			}
