@@ -213,9 +213,9 @@ extension UIView {
 		- direction: Direction of the constraint.  Either vertical or horizontal. horizontal
 		- constraints: The DHConstraintBuilder object.
 	*/
-	public func addConstraints(_ direction: DHConstraintDirection, _ constraints: DHConstraintBuilder) {
-		addConstraints("\(direction.rawValue)\(constraints)")
-	}
+//	public func addConstraints(_ direction: DHConstraintDirection, _ constraints: DHConstraintBuilder) {
+//		addConstraints("\(direction.rawValue)\(constraints)")
+//	}
 	
 	/**
 	A helper method that adds constraints.  Automatically sets __translatesAutoresizingMaskIntoConstraints__ to __false__ and adds any views specified in the DHConstraintBuilder if needed.
@@ -224,11 +224,12 @@ extension UIView {
 		- constraints: The DHConstraintBuilder object.
 		- setAllViewsTranslatesAutoresizingMaskIntoConstraintsToFalse: By default this value is true.  If this value is true, then every view specified in the DHConstraintBuilder constraintString will have it's __translatesAutoresizingMaskIntoConstraints__ property set to false.  If this value is false then the value of each view's __translatesAutoresizingMaskIntoConstraints__ will be untouched.
 	*/
-	public func addConstraints(c: DHConstraintBuilder, setAllViewsTranslatesAutoresizingMaskIntoConstraintsToFalse: Bool = true) {
-		print(c.constraintString)
-		print(c.metricDict)
-		print(c.viewDict)
-		c.viewDict.forEach({
+	public func addConstraints(_ direction: DHConstraintDirection, _ constraints: DHConstraintBuilder, setAllViewsTranslatesAutoresizingMaskIntoConstraintsToFalse: Bool = true) {
+//		print(constraints.constraintString)
+//		print(constraints.metricDict)
+//		print(constraints.viewDict)
+//		print(constraints.options)
+		constraints.viewDict.forEach({
 			if setAllViewsTranslatesAutoresizingMaskIntoConstraintsToFalse {
 				$1.translatesAutoresizingMaskIntoConstraints = false
 			}
@@ -237,10 +238,11 @@ extension UIView {
 				self.addSubview($1)
 			}
 		})
-		addConstraints(NSLayoutConstraint.constraintsWithVisualFormat(c.constraintString,
-			options: c.options,
-			metrics: c.metricDict,
-			views: c.viewDict))
+		addConstraints(
+			NSLayoutConstraint.constraintsWithVisualFormat("\(direction.rawValue)\(constraints.constraintString)",
+			options: constraints.options,
+			metrics: constraints.metricDict,
+			views: constraints.viewDict))
 	}
 }
 
