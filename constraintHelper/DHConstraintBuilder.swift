@@ -53,7 +53,40 @@ let view5 = UIView()
 view3.addConstraints(view4 ^-^ 8 ^-^ view5) // view1 is 8 units away from view2
 ```
 */
-public func ^-^<T,U>(lhs: T, rhs: U) -> DHConstraintBuilder {
+public func ^-^(lhs: DHConstraintBuilder, rhs: DHConstraintBuilder) -> DHConstraintBuilder {
+	return "\(lhs)-\(rhs)"
+}
+public func ^-^(lhs: DHConstraintBuilder, rhs: UIView) -> DHConstraintBuilder {
+	return "\(lhs)-\(rhs)"
+}
+public func ^-^(lhs: DHConstraintBuilder, rhs: Int) -> DHConstraintBuilder {
+	return "\(lhs)-\(rhs)"
+}
+public func ^-^<U: FloatingPointType>(lhs: DHConstraintBuilder, rhs: U) -> DHConstraintBuilder {
+	return "\(lhs)-\(rhs)"
+}
+public func ^-^(lhs: UIView, rhs: DHConstraintBuilder) -> DHConstraintBuilder {
+	return "\(lhs)-\(rhs)"
+}
+public func ^-^(lhs: UIView, rhs: UIView) -> DHConstraintBuilder {
+	return "\(lhs)-\(rhs)"
+}
+public func ^-^(lhs: UIView, rhs: Int) -> DHConstraintBuilder {
+	return "\(lhs)-\(rhs)"
+}
+public func ^-^<U: FloatingPointType>(lhs: UIView, rhs: U) -> DHConstraintBuilder {
+	return "\(lhs)-\(rhs)"
+}
+public func ^-^(lhs: Int, rhs: DHConstraintBuilder) -> DHConstraintBuilder {
+	return "\(lhs)-\(rhs)"
+}
+public func ^-^(lhs: Int, rhs: UIView) -> DHConstraintBuilder {
+	return "\(lhs)-\(rhs)"
+}
+public func ^-^<U: FloatingPointType>(lhs: U, rhs: DHConstraintBuilder) -> DHConstraintBuilder {
+	return "\(lhs)-\(rhs)"
+}
+public func ^-^<U: FloatingPointType>(lhs: U, rhs: UIView) -> DHConstraintBuilder {
 	return "\(lhs)-\(rhs)"
 }
 
@@ -66,7 +99,16 @@ let view2 = UIView()
 view1.addConstraints(() |-^ view2)
 ```
 */
-public func |-^<T>(lhs: (Void), rhs: T) -> DHConstraintBuilder {
+public func |-^(lhs: Void, rhs: DHConstraintBuilder) -> DHConstraintBuilder {
+	return "|-\(rhs)"
+}
+public func |-^(lhs: Void, rhs: UIView) -> DHConstraintBuilder {
+	return "|-\(rhs)"
+}
+public func |-^(lhs: Void, rhs: Int) -> DHConstraintBuilder {
+	return "|-\(rhs)"
+}
+public func |-^<U: FloatingPointType>(lhs: Void, rhs: U) -> DHConstraintBuilder {
 	return "|-\(rhs)"
 }
 
@@ -79,7 +121,16 @@ let view2 = UIView()
 view1.addConstraints(view2 ^-| ())
 ```
 */
-public func ^-|<T>(lhs: T, rhs: (Void)) -> DHConstraintBuilder {
+public func ^-|(lhs: DHConstraintBuilder, rhs: Void) -> DHConstraintBuilder {
+	return "\(lhs)-|"
+}
+public func ^-|(lhs: UIView, rhs: Void) -> DHConstraintBuilder {
+	return "\(lhs)-|"
+}
+public func ^-|(lhs: Int, rhs: Void) -> DHConstraintBuilder {
+	return "\(lhs)-|"
+}
+public func ^-|<U: FloatingPointType>(lhs: U, rhs: Void) -> DHConstraintBuilder {
 	return "\(lhs)-|"
 }
 
@@ -93,7 +144,40 @@ let view2 = UIView()
 view0.addConstraints(view1 ^>=^ 8 ^-^ view2) // view1 is >=8 units away from view2
 ```
 */
-public func ^>=^<T>(lhs: DHConstraintBuilder, rhs: T) -> DHConstraintBuilder {
+public func ^>=^(lhs: DHConstraintBuilder, rhs: DHConstraintBuilder) -> DHConstraintBuilder {
+	return "\(lhs)->=\(rhs)"
+}
+public func ^>=^(lhs: DHConstraintBuilder, rhs: UIView) -> DHConstraintBuilder {
+	return "\(lhs)->=\(rhs)"
+}
+public func ^>=^(lhs: DHConstraintBuilder, rhs: Int) -> DHConstraintBuilder {
+	return "\(lhs)->=\(rhs)"
+}
+public func ^>=^<U: FloatingPointType>(lhs: DHConstraintBuilder, rhs: U) -> DHConstraintBuilder {
+	return "\(lhs)->=\(rhs)"
+}
+public func ^>=^(lhs: UIView, rhs: DHConstraintBuilder) -> DHConstraintBuilder {
+	return "\(lhs)->=\(rhs)"
+}
+public func ^>=^(lhs: UIView, rhs: UIView) -> DHConstraintBuilder {
+	return "\(lhs)->=\(rhs)"
+}
+public func ^>=^(lhs: UIView, rhs: Int) -> DHConstraintBuilder {
+	return "\(lhs)->=\(rhs)"
+}
+public func ^>=^<U: FloatingPointType>(lhs: UIView, rhs: U) -> DHConstraintBuilder {
+	return "\(lhs)->=\(rhs)"
+}
+public func ^>=^(lhs: Int, rhs: DHConstraintBuilder) -> DHConstraintBuilder {
+	return "\(lhs)->=\(rhs)"
+}
+public func ^>=^(lhs: Int, rhs: UIView) -> DHConstraintBuilder {
+	return "\(lhs)->=\(rhs)"
+}
+public func ^>=^<U: FloatingPointType>(lhs: U, rhs: DHConstraintBuilder) -> DHConstraintBuilder {
+	return "\(lhs)->=\(rhs)"
+}
+public func ^>=^<U: FloatingPointType>(lhs: U, rhs: UIView) -> DHConstraintBuilder {
 	return "\(lhs)->=\(rhs)"
 }
 
@@ -107,7 +191,40 @@ let view2 = UIView()
 view0.addConstraints(view1 ^<=^ 8 ^-^ view2) // view1 is <=8 units away from view2
 ```
 */
-public func ^<=^<T>(lhs: DHConstraintBuilder, rhs: T) -> DHConstraintBuilder {
+public func ^<=^(lhs: DHConstraintBuilder, rhs: DHConstraintBuilder) -> DHConstraintBuilder {
+	return "\(lhs)-<=\(rhs)"
+}
+public func ^<=^(lhs: DHConstraintBuilder, rhs: UIView) -> DHConstraintBuilder {
+	return "\(lhs)-<=\(rhs)"
+}
+public func ^<=^(lhs: DHConstraintBuilder, rhs: Int) -> DHConstraintBuilder {
+	return "\(lhs)-<=\(rhs)"
+}
+public func ^<=^<U: FloatingPointType>(lhs: DHConstraintBuilder, rhs: U) -> DHConstraintBuilder {
+	return "\(lhs)-<=\(rhs)"
+}
+public func ^<=^(lhs: UIView, rhs: DHConstraintBuilder) -> DHConstraintBuilder {
+	return "\(lhs)-<=\(rhs)"
+}
+public func ^<=^(lhs: UIView, rhs: UIView) -> DHConstraintBuilder {
+	return "\(lhs)-<=\(rhs)"
+}
+public func ^<=^(lhs: UIView, rhs: Int) -> DHConstraintBuilder {
+	return "\(lhs)-<=\(rhs)"
+}
+public func ^<=^<U: FloatingPointType>(lhs: UIView, rhs: U) -> DHConstraintBuilder {
+	return "\(lhs)-<=\(rhs)"
+}
+public func ^<=^(lhs: Int, rhs: DHConstraintBuilder) -> DHConstraintBuilder {
+	return "\(lhs)-<=\(rhs)"
+}
+public func ^<=^(lhs: Int, rhs: UIView) -> DHConstraintBuilder {
+	return "\(lhs)-<=\(rhs)"
+}
+public func ^<=^<U: FloatingPointType>(lhs: U, rhs: DHConstraintBuilder) -> DHConstraintBuilder {
+	return "\(lhs)-<=\(rhs)"
+}
+public func ^<=^<U: FloatingPointType>(lhs: U, rhs: UIView) -> DHConstraintBuilder {
 	return "\(lhs)-<=\(rhs)"
 }
 
@@ -115,7 +232,7 @@ public struct DHConstraintBuilder: StringInterpolationConvertible {
 	
 	let constraintString: String
 	public var options: NSLayoutFormatOptions = NSLayoutFormatOptions(rawValue: 0)
-	private var metricDict = [String : Int]()
+	private var metricDict = [String : AnyObject]()
 	private var viewDict = [String : UIView]()
 	private struct __ {
 		static var count: Int = 0
@@ -156,28 +273,38 @@ public struct DHConstraintBuilder: StringInterpolationConvertible {
 		- priority: priority of a constraint where the range is from 1 to 1000.  Default value is 1000
 	
 	*/
-	public init(_ view: UIView? = nil, length: Int? = nil, priority: Int = 1000) {
+	
+	public init(length: Int, priority: Int = 1000) {
 		let uuid = __.count
 		__.count = __.count &+ 1
-		//view?.translatesAutoresizingMaskIntoConstraints = false
-		switch (view, length) {
-		case let (v?, l?):
-			viewDict = ["view_\(uuid)" : v]
-			metricDict = ["metric_\(uuid)" : l]
-			constraintString = "[view_\(uuid)(metric_\(uuid)@\(priority))]"
-		case let (v?, nil):
-			viewDict = ["view_\(uuid)" : v]
-			constraintString = "[view_\(uuid)]"
-		case let (nil, l?):
-			metricDict = ["metric_\(uuid)" : l]
-			constraintString = "metric_\(uuid)@\(priority)"
-		case (nil, nil):
-			assertionFailure("at least view or length must be added.  Having both non existent is not allowed")
-			constraintString = ""
-		}
+		metricDict = ["metric_\(uuid)" : length]
+		constraintString = "metric_\(uuid)@\(priority)"
 	}
 	
-	public init(_ view: UIView, lengthRelation: DHConstraintRelation = .Equal, lengthRelativeToView: UIView, priority: Int = 1000) {
+	public init(_ view: UIView, _ lengthRelation: DHConstraintRelation = .Equal, length: Int, priority: Int = 1000) {
+		let uuid = __.count
+		__.count = __.count &+ 1
+		viewDict = ["view_\(uuid)" : view]
+		metricDict = ["metric_\(uuid)" : length]
+		constraintString = "[view_\(uuid)(\(lengthRelation.rawValue)metric_\(uuid)@\(priority))]"
+	}
+	
+	public init<U: FloatingPointType>(length: U, priority: Int = 1000) {
+		let uuid = __.count
+		__.count = __.count &+ 1
+		metricDict = ["metric_\(uuid)" : length as! AnyObject]
+		constraintString = "metric_\(uuid)@\(priority)"
+	}
+	
+	public init<U: FloatingPointType>(_ view: UIView, _ lengthRelation: DHConstraintRelation = .Equal, length: U, priority: Int = 1000) {
+		let uuid = __.count
+		__.count = __.count &+ 1
+		viewDict = ["view_\(uuid)" : view]
+		metricDict = ["metric_\(uuid)" : length as! AnyObject]
+		constraintString = "[view_\(uuid)(\(lengthRelation.rawValue)metric_\(uuid)@\(priority))]"
+	}
+	
+	public init(_ view: UIView, _ lengthRelation: DHConstraintRelation = .Equal, lengthRelativeToView: UIView, priority: Int = 1000) {
 		let uuid = __.count
 		__.count = __.count &+ 1
 		let uuid2 = __.count
@@ -205,17 +332,6 @@ public enum DHConstraintDirection: String {
 }
 
 extension UIView {
-	
-	/**
-	A helper method that adds constraints vertically or horizontally.  Automatically sets __translatesAutoresizingMaskIntoConstraints__ to __false__ and adds any views specified in the DHConstraintBuilder if needed.
-	
-	- Parameters:
-		- direction: Direction of the constraint.  Either vertical or horizontal. horizontal
-		- constraints: The DHConstraintBuilder object.
-	*/
-//	public func addConstraints(_ direction: DHConstraintDirection, _ constraints: DHConstraintBuilder) {
-//		addConstraints("\(direction.rawValue)\(constraints)")
-//	}
 	
 	/**
 	A helper method that adds constraints.  Automatically sets __translatesAutoresizingMaskIntoConstraints__ to __false__ and adds any views specified in the DHConstraintBuilder if needed.
