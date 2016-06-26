@@ -229,11 +229,10 @@ public func ^<=^<U: FloatingPointType>(lhs: U, rhs: UIView) -> DHConstraintBuild
 }
 
 public struct DHConstraintBuilder: StringInterpolationConvertible {
-	
 	let constraintString: String
 	public var options: NSLayoutFormatOptions = NSLayoutFormatOptions(rawValue: 0)
-	private var metricDict = [String : AnyObject]()
-	private var viewDict = [String : UIView]()
+	let metricDict: [String : AnyObject]
+	let viewDict: [String : UIView]
 	private struct __ {
 		static var count: Int = 0
 	}
@@ -256,10 +255,15 @@ public struct DHConstraintBuilder: StringInterpolationConvertible {
 			let uuid = __.count
 			__.count = __.count &+ 1
 			viewDict = ["view_\(uuid)" : v]
+			metricDict = [:]
 			constraintString = "[view_\(uuid)]"
 		} else if let s = expr as? String {
+			viewDict = [:]
+			metricDict = [:]
 			constraintString = "\(s)"
 		} else {
+			viewDict = [:]
+			metricDict = [:]
 			constraintString = "\(String(expr))"
 		}
 	}
@@ -277,6 +281,7 @@ public struct DHConstraintBuilder: StringInterpolationConvertible {
 	public init(length: Int, priority: Int = 1000) {
 		let uuid = __.count
 		__.count = __.count &+ 1
+		viewDict = [:]
 		metricDict = ["metric_\(uuid)" : length]
 		constraintString = "metric_\(uuid)@\(priority)"
 	}
@@ -289,9 +294,36 @@ public struct DHConstraintBuilder: StringInterpolationConvertible {
 		constraintString = "[view_\(uuid)(\(lengthRelation.rawValue)metric_\(uuid)@\(priority))]"
 	}
 	
+	public init(_ view: UIView, multipleLengths: [(relation: DHConstraintRelation, length: Int)]) {
+		self.init(view, multipleLengths: multipleLengths.map({ ($0, $1, 1000) }))
+	}
+
+	public init(_ view: UIView, multipleLengths: [(DHConstraintRelation, length: Int, priority: Int)]) {
+		assert(multipleLengths.count > 0, "Needs at least one")
+		let uuid = __.count
+		viewDict = ["view_\(uuid)" : view]
+		
+		var _metricDict = Dictionary<String, AnyObject>()
+		multipleLengths.forEach {
+			_metricDict["metric_\(__.count)"] = $0.length
+			__.count = __.count &+ 1
+		}
+		
+		metricDict = _metricDict
+		
+		var offset = -1
+		let metricString = multipleLengths.reduce("") {
+			offset += 1
+			let spacer = $0.isEmpty ? "" : ", "
+			return $0 + spacer + "\($1.0.rawValue)metric_\(uuid + offset)@\($1.priority)"
+		}
+		constraintString = "[view_\(uuid)(\(metricString))]"
+	}
+	
 	public init<U: FloatingPointType>(length: U, priority: Int = 1000) {
 		let uuid = __.count
 		__.count = __.count &+ 1
+		viewDict = [:]
 		metricDict = ["metric_\(uuid)" : length as! AnyObject]
 		constraintString = "metric_\(uuid)@\(priority)"
 	}
@@ -304,6 +336,32 @@ public struct DHConstraintBuilder: StringInterpolationConvertible {
 		constraintString = "[view_\(uuid)(\(lengthRelation.rawValue)metric_\(uuid)@\(priority))]"
 	}
 	
+	public init<U: FloatingPointType>(_ view: UIView, multipleLengths: [(relation: DHConstraintRelation, length: U)]) {
+		self.init(view, multipleLengths: multipleLengths.map({ ($0, $1, 1000) }))
+	}
+	
+	public init<U: FloatingPointType>(_ view: UIView, multipleLengths: [(DHConstraintRelation, length: U, priority: Int)]) {
+		assert(multipleLengths.count > 0, "Needs at least one")
+		let uuid = __.count
+		viewDict = ["view_\(uuid)" : view]
+		
+		var _metricDict = Dictionary<String, AnyObject>()
+		multipleLengths.forEach {
+			_metricDict["metric_\(__.count)"] = ($0.length as! AnyObject)
+			__.count = __.count &+ 1
+		}
+		
+		metricDict = _metricDict
+		
+		var offset = -1
+		let metricString = multipleLengths.reduce("") {
+			offset += 1
+			let spacer = $0.isEmpty ? "" : ", "
+			return $0 + spacer + "\($1.0.rawValue)metric_\(uuid + offset)@\($1.priority)"
+		}
+		constraintString = "[view_\(uuid)(\(metricString))]"
+	}
+	
 	public init(_ view: UIView, _ lengthRelation: DHConstraintRelation = .Equal, lengthRelativeToView: UIView, priority: Int = 1000) {
 		let uuid = __.count
 		__.count = __.count &+ 1
@@ -313,6 +371,7 @@ public struct DHConstraintBuilder: StringInterpolationConvertible {
 			"view_\(uuid)" : view,
 			"viewR_\(uuid2)" : lengthRelativeToView
 		]
+		metricDict = [:]
 		constraintString = "[view_\(uuid)(\(lengthRelation.rawValue)viewR_\(uuid2)@\(priority))]"
 	}
 	
@@ -341,10 +400,6 @@ extension UIView {
 		- setAllViewsTranslatesAutoresizingMaskIntoConstraintsToFalse: By default this value is true.  If this value is true, then every view specified in the DHConstraintBuilder constraintString will have it's __translatesAutoresizingMaskIntoConstraints__ property set to false.  If this value is false then the value of each view's __translatesAutoresizingMaskIntoConstraints__ will be untouched.
 	*/
 	public func addConstraints(_ direction: DHConstraintDirection, _ constraints: DHConstraintBuilder, setAllViewsTranslatesAutoresizingMaskIntoConstraintsToFalse: Bool = true) {
-//		print(constraints.constraintString)
-//		print(constraints.metricDict)
-//		print(constraints.viewDict)
-//		print(constraints.options)
 		constraints.viewDict.forEach({
 			if setAllViewsTranslatesAutoresizingMaskIntoConstraintsToFalse {
 				$1.translatesAutoresizingMaskIntoConstraints = false
