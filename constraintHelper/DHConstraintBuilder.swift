@@ -24,7 +24,10 @@ SOFTWARE.
 
 import UIKit
 
-private func +<KEY,VALUE>(a: [KEY:VALUE], b: [KEY:VALUE]) -> [KEY:VALUE] {
+/**
+Used to merge two dictionary objects into one.  If "b" contains Keys that "a" has, "b" will overwrite "a"'s values for that.
+*/
+private func +<VALUE>(a: [String:VALUE], b: [String:VALUE]) -> [String:VALUE] {
 	var d = a
 	for (k, v) in b {
 		d[k] = v
@@ -112,11 +115,16 @@ public func ^<=^<T, U>(lhs: T, rhs: U) -> DHConstraintBuilder {
 }
 
 public struct DHConstraintBuilder: StringInterpolationConvertible {
+	/// The Generated Constraint String
 	let constraintString: String
+	
+	/// Align all views according to NSLayoutFormatOptions
 	public var options: NSLayoutFormatOptions = NSLayoutFormatOptions(rawValue: 0)
-	let metricDict: [String : AnyObject]
+	/// Holds accumulated metric data
+	let metricDict: [String : NSNumber]
+	/// Holds accumulated view data
 	let viewDict: [String : UIView]
-	private struct __ {
+	struct __ {
 		static var count: Int = 0
 	}
 	
@@ -161,7 +169,7 @@ public struct DHConstraintBuilder: StringInterpolationConvertible {
 	
 	*/
 	
-	public init(length: Int, priority: Int = 1000) {
+	public init(length: NSNumber, priority: Int = 1000) {
 		let uuid = __.count
 		__.count = __.count &+ 1
 		viewDict = [:]
@@ -169,7 +177,7 @@ public struct DHConstraintBuilder: StringInterpolationConvertible {
 		constraintString = "metric_\(uuid)@\(priority)"
 	}
 	
-	public init(_ view: UIView, _ lengthRelation: DHConstraintRelation = .Equal, length: Int, priority: Int = 1000) {
+	public init(_ view: UIView, _ lengthRelation: DHConstraintRelation = .Equal, length: NSNumber, priority: Int = 1000) {
 		let uuid = __.count
 		__.count = __.count &+ 1
 		viewDict = ["view_\(uuid)" : view]
@@ -177,60 +185,24 @@ public struct DHConstraintBuilder: StringInterpolationConvertible {
 		constraintString = "[view_\(uuid)(\(lengthRelation.rawValue)metric_\(uuid)@\(priority))]"
 	}
 	
-	public init(_ view: UIView, multipleLengths: [(relation: DHConstraintRelation, length: Int)]) {
+	public init(_ view: UIView, multipleLengths: [(relation: DHConstraintRelation, length: NSNumber)]) {
 		self.init(view, multipleLengths: multipleLengths.map({ ($0, $1, 1000) }))
+	}
+	
+	public init(_ view: UIView, range r: Range<Int>) {
+		self.init(view, multipleLengths: [
+			(.GreaterThanOrEqual, length: r.startIndex), (.LessThanOrEqual, length: r.endIndex - 1)
+		])
 	}
 
-	public init(_ view: UIView, multipleLengths: [(DHConstraintRelation, length: Int, priority: Int)]) {
+	public init(_ view: UIView, multipleLengths: [(DHConstraintRelation, length: NSNumber, priority: Int)]) {
 		assert(multipleLengths.count > 0, "Needs at least one")
 		let uuid = __.count
 		viewDict = ["view_\(uuid)" : view]
 		
-		var _metricDict = Dictionary<String, AnyObject>()
+		var _metricDict = Dictionary<String, NSNumber>()
 		multipleLengths.forEach {
 			_metricDict["metric_\(__.count)"] = $0.length
-			__.count = __.count &+ 1
-		}
-		
-		metricDict = _metricDict
-		
-		var offset = -1
-		let metricString = multipleLengths.reduce("") {
-			offset += 1
-			let spacer = $0.isEmpty ? "" : ","
-			return $0 + spacer + "\($1.0.rawValue)metric_\(uuid + offset)@\($1.priority)"
-		}
-		constraintString = "[view_\(uuid)(\(metricString))]"
-	}
-	
-	public init<U: FloatingPointType>(length: U, priority: Int = 1000) {
-		let uuid = __.count
-		__.count = __.count &+ 1
-		viewDict = [:]
-		metricDict = ["metric_\(uuid)" : length as! AnyObject]
-		constraintString = "metric_\(uuid)@\(priority)"
-	}
-	
-	public init<U: FloatingPointType>(_ view: UIView, _ lengthRelation: DHConstraintRelation = .Equal, length: U, priority: Int = 1000) {
-		let uuid = __.count
-		__.count = __.count &+ 1
-		viewDict = ["view_\(uuid)" : view]
-		metricDict = ["metric_\(uuid)" : length as! AnyObject]
-		constraintString = "[view_\(uuid)(\(lengthRelation.rawValue)metric_\(uuid)@\(priority))]"
-	}
-	
-	public init<U: FloatingPointType>(_ view: UIView, multipleLengths: [(relation: DHConstraintRelation, length: U)]) {
-		self.init(view, multipleLengths: multipleLengths.map({ ($0, $1, 1000) }))
-	}
-	
-	public init<U: FloatingPointType>(_ view: UIView, multipleLengths: [(DHConstraintRelation, length: U, priority: Int)]) {
-		assert(multipleLengths.count > 0, "Needs at least one")
-		let uuid = __.count
-		viewDict = ["view_\(uuid)" : view]
-		
-		var _metricDict = Dictionary<String, AnyObject>()
-		multipleLengths.forEach {
-			_metricDict["metric_\(__.count)"] = ($0.length as! AnyObject)
 			__.count = __.count &+ 1
 		}
 		

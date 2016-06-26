@@ -24,175 +24,473 @@ class DHConstraintBuilderTests: XCTestCase {
     
     override func tearDown() {
         // Put teardown code here. This method is called after the invocation of each test method in the class.
-        super.tearDown()
+		DHConstraintBuilder.__.count = 0
+		super.tearDown()
     }
 	
-    func testExample() {
-
-		// Single View Tests
-		do {
-			let v = UIView()
-			let baseCase = DHConstraintBuilder(v, length: 50)
-			let expectedConstraintString = "[view_0(==metric_0@1000)]"
-			let expectedOptions = NSLayoutFormatOptions(rawValue: 0)
-			
-			XCTAssertEqual(baseCase.constraintString, expectedConstraintString)
-			XCTAssertEqual(baseCase.options, expectedOptions)
-			XCTAssertEqual(baseCase.metricDict["metric_0"]! as? Int, 50)
-			XCTAssertEqual(baseCase.viewDict["view_0"]!, v)
-		}
-		// Single View With Super view
-		do {
-			let v = UIView()
-			let baseCase_superview = () |-^ v ^-| () // Happy Constraint
-			let expectedConstraintString = "|-[view_1]-|"
-			let expectedOptions = NSLayoutFormatOptions(rawValue: 0)
-			
-			XCTAssertEqual(baseCase_superview.constraintString, expectedConstraintString)
-			XCTAssertEqual(baseCase_superview.options, expectedOptions)
-			XCTAssertEqual(baseCase_superview.metricDict.count, 0)
-			XCTAssertEqual(baseCase_superview.viewDict["view_1"]!, v)
-		}
+	func testSuperViewWithDefaultConstraintToView() {
+		let v = UIView()
+		let sut = () |-^ v
 		
-		// Single View With Length With Super view
-		do {
-			let v = UIView()
-			let baseCase_superview = () |-^ DHConstraintBuilder(v, length: 50)
-			let expectedConstraintString = "|-[view_2(==metric_2@1000)]"
-			let expectedOptions = NSLayoutFormatOptions(rawValue: 0)
-			
-			XCTAssertEqual(baseCase_superview.constraintString, expectedConstraintString)
-			XCTAssertEqual(baseCase_superview.options, expectedOptions)
-			XCTAssertEqual(baseCase_superview.metricDict["metric_2"]! as? Int, 50)
-			XCTAssertEqual(baseCase_superview.viewDict["view_2"]!, v)
-		}
-
-		// Joining two views within super view
-		do {
-			let v1 = UIView()
-			let v2 = UIView()
-			var baseCase_superview = () |-^ v1 ^-^ v2 ^-| ()
-			baseCase_superview.options = .AlignAllCenterY
-			let expectedConstraintString = "|-[view_3]-[view_4]-|"
-			let expectedOptions = NSLayoutFormatOptions.AlignAllCenterY
-			
-			XCTAssertEqual(baseCase_superview.constraintString, expectedConstraintString)
-			XCTAssertEqual(baseCase_superview.options, expectedOptions)
-			XCTAssertEqual(baseCase_superview.metricDict.count, 0)
-			XCTAssertEqual(baseCase_superview.viewDict["view_3"]!, v1)
-			XCTAssertEqual(baseCase_superview.viewDict["view_4"]!, v2)
-		}
-	
-		// Joining two views_custom gap
-		do {
-			let v1 = UIView()
-			let v2 = UIView()
-			let v3 = UIView()
-			
-			var baseCase_superview = () |-^ 1 ^-^ v1 ^-^ 1 ^-^ v2 ^-^ 2 ^-^ v3 ^-^ 3 ^-| ()
-			baseCase_superview.options = .AlignAllCenterY
-			let expectedConstraintString = "|-1-[view_5]-1-[view_6]-2-[view_7]-3-|"
-			let expectedOptions = NSLayoutFormatOptions.AlignAllCenterY
-			
-			XCTAssertEqual(baseCase_superview.constraintString, expectedConstraintString)
-			XCTAssertEqual(baseCase_superview.options, expectedOptions)
-			XCTAssertEqual(baseCase_superview.metricDict.count, 0)
-			XCTAssertEqual(baseCase_superview.viewDict["view_5"]!, v1)
-			XCTAssertEqual(baseCase_superview.viewDict["view_6"]!, v2)
-			XCTAssertEqual(baseCase_superview.viewDict["view_7"]!, v3)
-		}
-
-		// length with priority
-		do {
-			let lengthWithPriority = DHConstraintBuilder(length: 35)
-			XCTAssertEqual(lengthWithPriority.constraintString, "metric_8@1000")
-			
-			XCTAssertEqual(lengthWithPriority.metricDict["metric_8"]! as? Int, 35)
-			XCTAssertEqual(lengthWithPriority.viewDict.count, 0)
-
-			let lengthWithPriority2 = DHConstraintBuilder(length: 89, priority: 777)
-			XCTAssertEqual(lengthWithPriority2.constraintString, "metric_9@777")
-			XCTAssertEqual(lengthWithPriority2.metricDict["metric_9"]! as? Int, 89)
-			XCTAssertEqual(lengthWithPriority2.viewDict.count, 0)
-		}
-		
-		// view length with relation
-		do {
-			let v = UIView()
-			var lengthWithPriority = DHConstraintBuilder(v, .Equal, length: 35)
-			XCTAssertEqual(lengthWithPriority.constraintString, "[view_10(==metric_10@1000)]")
-			XCTAssertEqual(lengthWithPriority.metricDict["metric_10"]! as? Int, 35)
-			XCTAssertEqual(lengthWithPriority.viewDict["view_10"], v)
-			
-			lengthWithPriority = DHConstraintBuilder(v, .GreaterThanOrEqual, length: 35)
-			XCTAssertEqual(lengthWithPriority.constraintString, "[view_11(>=metric_11@1000)]")
-			XCTAssertEqual(lengthWithPriority.metricDict["metric_11"]! as? Int, 35)
-			XCTAssertEqual(lengthWithPriority.viewDict["view_11"], v)
-			
-			lengthWithPriority = DHConstraintBuilder(v, .LessThanOrEqual, length: 35)
-			XCTAssertEqual(lengthWithPriority.constraintString, "[view_12(<=metric_12@1000)]")
-			XCTAssertEqual(lengthWithPriority.metricDict["metric_12"]! as? Int, 35)
-			XCTAssertEqual(lengthWithPriority.viewDict["view_12"], v)
-		}
-		// view with multiple length
-		do {
-			let v = UIView()
-			var lengthWithPriority = DHConstraintBuilder(v, multipleLengths: [(.Equal, length: 55)])
-			XCTAssertEqual(lengthWithPriority.constraintString, "[view_13(==metric_13@1000)]")
-			XCTAssertEqual(lengthWithPriority.metricDict["metric_13"]! as? Int, 55)
-			XCTAssertEqual(lengthWithPriority.viewDict["view_13"], v)
-			
-			lengthWithPriority = DHConstraintBuilder(v, multipleLengths: [
-				(.GreaterThanOrEqual, length: 10),
-				(.LessThanOrEqual, length: 100)
-			])
-			XCTAssertEqual(lengthWithPriority.constraintString, "[view_14(>=metric_14@1000, <=metric_15@1000)]")
-			XCTAssertEqual(lengthWithPriority.metricDict["metric_14"]! as? Int, 10)
-			XCTAssertEqual(lengthWithPriority.metricDict["metric_15"]! as? Int, 100)
-			XCTAssertEqual(lengthWithPriority.viewDict["view_14"], v)
-		}
-		do {
-			XCTAssertEqual((() |-^ 5).constraintString , "|-5")
-			XCTAssertEqual((() |-^ 5.5).constraintString , "|-5.5")
-			XCTAssertEqual((() |-^ UIView()).constraintString , "|-[view_16]")
-			
-			XCTAssertEqual((5 ^-| ()).constraintString , "5-|")
-			XCTAssertEqual((5.5 ^-| ()).constraintString , "5.5-|")
-			XCTAssertEqual(((UIView() ^-| ()).constraintString) , "[view_17]-|")
-			
-			XCTAssertEqual((UIView() ^-^ 5).constraintString , "[view_18]-5")
-			XCTAssertEqual(((UIView() ^-^ 5.5).constraintString) , "[view_19]-5.5")
-			XCTAssertEqual(((UIView() ^-^ UIView()).constraintString) , "[view_20]-[view_21]")
-		
-			XCTAssertEqual((UIView() ^>=^ 5).constraintString , "[view_22]->=5")
-			XCTAssertEqual(((UIView() ^>=^ 5.5).constraintString) , "[view_23]->=5.5")
-			
-			XCTAssertEqual((UIView() ^<=^ 5).constraintString , "[view_24]-<=5")
-			XCTAssertEqual(((UIView() ^<=^ 5.5).constraintString) , "[view_25]-<=5.5")
-		}
-		do {
-			XCTAssertEqual(DHConstraintBuilder(length: 8.8).constraintString, "metric_26@1000")
-			XCTAssertEqual(DHConstraintBuilder(UIView(), length: 8.8).constraintString, "[view_27(==metric_27@1000)]")
-			XCTAssertEqual(DHConstraintBuilder(UIView(), multipleLengths: [(.Equal, length: 8.8)]).constraintString, "[view_28(==metric_28@1000)]")
-			XCTAssertEqual(DHConstraintBuilder(UIView(), multipleLengths: [(.GreaterThanOrEqual, length: 10.0), (.LessThanOrEqual, length: 20.0)]).constraintString, "[view_29(>=metric_29@1000, <=metric_30@1000)]")
-			
-			XCTAssertEqual(DHConstraintBuilder(UIView(), .Equal, lengthRelativeToView: UIView()).constraintString, "[view_31(==viewR_32@1000)]")
-			XCTAssertEqual(DHConstraintBuilder(UIView(), .GreaterThanOrEqual, lengthRelativeToView: UIView()).constraintString, "[view_33(>=viewR_34@1000)]")
-			XCTAssertEqual(DHConstraintBuilder(UIView(), .LessThanOrEqual, lengthRelativeToView: UIView()).constraintString, "[view_35(<=viewR_36@1000)]")
-			
-			
-		}
-		do {
-			let v = UIView(frame: CGRect(x: 0, y: 0, width: 100, height: 100))
-			let v2 = UIView()
-			v.addConstraints(.H, () |-^ 0 ^-^ v2 ^-^ 0 ^-| ())
-			v.addConstraints(.V, () |-^ 0 ^-^ v2 ^-^ 0 ^-| ())
-			
-			v.layoutIfNeeded()
-			XCTAssertTrue(v.subviews.contains(v2))
-			XCTAssertEqual(v.frame, CGRect(x: 0, y: 0, width: 100, height: 100))
-			XCTAssertEqual(v2.frame, CGRect(x: 0, y: 0, width: 100, height: 100))
-		}
+		XCTAssertEqual(sut.constraintString , "|-[view_0]")
+		XCTAssertEqual(sut.metricDict, [:])
+		XCTAssertEqual(sut.viewDict, ["view_0" : v])
 	}
-    
+	
+	func testSuperViewWithIntegerConstraint() {
+		let sut = () |-^ 5
+		
+		XCTAssertEqual(sut.constraintString , "|-5")
+		XCTAssertEqual(sut.metricDict, [:])
+		XCTAssertEqual(sut.viewDict, [:])
+	}
+	
+	func testSuperViewWithFloatingPointConstraint() {
+		let sut = () |-^ 5.5
+		
+		XCTAssertEqual(sut.constraintString , "|-5.5")
+		XCTAssertEqual(sut.metricDict, [:])
+		XCTAssertEqual(sut.viewDict, [:])
+	}
+	
+	func testSuperViewWithDHConstraintBuilderViewWithLength() {
+		let L = 5
+		let v = UIView()
+		let sut = () |-^ DHConstraintBuilder(v, length: L)
+		
+		XCTAssertEqual(sut.constraintString , "|-[view_0(==metric_0@1000)]")
+		XCTAssertEqual(sut.metricDict, ["metric_0": L])
+		XCTAssertEqual(sut.viewDict, ["view_0" : v])
+	}
+	
+	func testSuperViewWithDHConstraintBuilderViewWithLengthWithPriority() {
+		let L = 5
+		let P = 999
+		let v = UIView()
+		let sut = () |-^ DHConstraintBuilder(v, length: L, priority: P)
+		
+		XCTAssertEqual(sut.constraintString , "|-[view_0(==metric_0@999)]")
+		XCTAssertEqual(sut.metricDict, ["metric_0": L])
+		XCTAssertEqual(sut.viewDict, ["view_0" : v])
+	}
+	
+	func testSuperViewWithDHConstraintBuilderFloat() {
+		let L = 5.5
+		let sut = () |-^ DHConstraintBuilder(length: L)
+		
+		XCTAssertEqual(sut.constraintString , "|-metric_0@1000")
+		XCTAssertEqual(sut.metricDict, ["metric_0": L])
+		XCTAssertEqual(sut.viewDict, [:])
+	}
+	
+	func testSuperViewWithDHConstraintBuilderInt() {
+		let L = 5
+		let sut = () |-^ DHConstraintBuilder(length: L)
+		
+		XCTAssertEqual(sut.constraintString , "|-metric_0@1000")
+		XCTAssertEqual(sut.metricDict, ["metric_0": L])
+		XCTAssertEqual(sut.viewDict, [:])
+	}
+
+	func testSuperViewWithDHConstraintBuilderFloatWithPriority() {
+		let L = 5
+		let P = 999
+		let sut = () |-^ DHConstraintBuilder(length: L, priority: P)
+		
+		XCTAssertEqual(sut.constraintString , "|-metric_0@999")
+		XCTAssertEqual(sut.metricDict, ["metric_0": L])
+		XCTAssertEqual(sut.viewDict, [:])
+	}
+	
+	func testSuperViewWithDHConstraintBuilderIntWithPriority() {
+		let L = 5
+		let P = 999
+		let sut = () |-^ DHConstraintBuilder(length: L, priority: P)
+		
+		XCTAssertEqual(sut.constraintString , "|-metric_0@999")
+		XCTAssertEqual(sut.metricDict, ["metric_0": L])
+		XCTAssertEqual(sut.viewDict, [:])
+	}
+	
+	//
+	func testViewWithDefaultConstraintToSuperView() {
+		let v = UIView()
+		let sut = v ^-| ()
+		
+		XCTAssertEqual(sut.constraintString , "[view_0]-|")
+		XCTAssertEqual(sut.metricDict, [:])
+		XCTAssertEqual(sut.viewDict, ["view_0" : v])
+	}
+	
+	func testIntegerConstraintToSuperView() {
+		let L = 5
+		let sut = L ^-| ()
+		
+		XCTAssertEqual(sut.constraintString , "\(L)-|")
+		XCTAssertEqual(sut.metricDict, [:])
+		XCTAssertEqual(sut.viewDict, [:])
+	}
+	
+	func testFloatingPointConstraintToSuperView() {
+		let L = 5.5
+		let sut = L ^-| ()
+		
+		XCTAssertEqual(sut.constraintString , "\(L)-|")
+		XCTAssertEqual(sut.metricDict, [:])
+		XCTAssertEqual(sut.viewDict, [:])
+	}
+	
+	func testDHConstraintBuilderViewWithLengthToSuperView() {
+		let L = 5
+		let v = UIView()
+		let sut = DHConstraintBuilder(v, length: L) ^-| ()
+		
+		XCTAssertEqual(sut.constraintString , "[view_0(==metric_0@1000)]-|")
+		XCTAssertEqual(sut.metricDict, ["metric_0": L])
+		XCTAssertEqual(sut.viewDict, ["view_0" : v])
+	}
+	
+	func testDHConstraintBuilderViewWithLengthWithPriorityToSuperView() {
+		let L = 5
+		let P = 999
+		let v = UIView()
+		let sut = DHConstraintBuilder(v, length: L, priority: P) ^-| ()
+		
+		XCTAssertEqual(sut.constraintString , "[view_0(==metric_0@999)]-|")
+		XCTAssertEqual(sut.metricDict, ["metric_0": L])
+		XCTAssertEqual(sut.viewDict, ["view_0" : v])
+	}
+	
+	func testDHConstraintBuilderFloatToSuperView() {
+		let L = 5.5
+		let sut = DHConstraintBuilder(length: L) ^-| ()
+		
+		XCTAssertEqual(sut.constraintString , "metric_0@1000-|")
+		XCTAssertEqual(sut.metricDict, ["metric_0": L])
+		XCTAssertEqual(sut.viewDict, [:])
+	}
+	
+	func testDHConstraintBuilderIntToSuperView() {
+		let L = 5
+		let sut = DHConstraintBuilder(length: L) ^-| ()
+		
+		XCTAssertEqual(sut.constraintString , "metric_0@1000-|")
+		XCTAssertEqual(sut.metricDict, ["metric_0": L])
+		XCTAssertEqual(sut.viewDict, [:])
+	}
+	
+	func testDHConstraintBuilderFloatWithPriorityToSuperView() {
+		let L = 5
+		let P = 999
+		let sut = DHConstraintBuilder(length: L, priority: P) ^-| ()
+		
+		XCTAssertEqual(sut.constraintString , "metric_0@999-|")
+		XCTAssertEqual(sut.metricDict, ["metric_0": L])
+		XCTAssertEqual(sut.viewDict, [:])
+	}
+	
+	func testDHConstraintBuilderIntWithPriorityToSuperView() {
+		let L = 5
+		let P = 999
+		let sut = DHConstraintBuilder(length: L, priority: P) ^-| ()
+		
+		XCTAssertEqual(sut.constraintString , "metric_0@999-|")
+		XCTAssertEqual(sut.metricDict, ["metric_0": L])
+		XCTAssertEqual(sut.viewDict, [:])
+	}
+	
+	func testViewToView() {
+		let v0 = UIView()
+		let v1 = UIView()
+		let sut = v0 ^-^ v1
+		
+		XCTAssertEqual(sut.constraintString , "[view_0]-[view_1]")
+		XCTAssertEqual(sut.metricDict, [:])
+		XCTAssertEqual(sut.viewDict, ["view_0":v0, "view_1":v1])
+	}
+	
+	func testViewToInt() {
+		let L = 5
+		let v = UIView()
+		let sut = v ^-^ L
+		
+		XCTAssertEqual(sut.constraintString , "[view_0]-\(L)")
+		XCTAssertEqual(sut.metricDict, [:])
+		XCTAssertEqual(sut.viewDict, ["view_0":v])
+	}
+	
+	func testViewToFloat() {
+		let L = 5.5
+		let v = UIView()
+		let sut = v ^-^ L
+		
+		XCTAssertEqual(sut.constraintString , "[view_0]-\(5.5)")
+		XCTAssertEqual(sut.metricDict, [:])
+		XCTAssertEqual(sut.viewDict, ["view_0":v])
+	}
+	
+	func testDHConstraintBuilderViewLengthToView() {
+		let v0 = UIView()
+		let v1 = UIView()
+		let L = 5
+		let sut = DHConstraintBuilder(v0, length: L) ^-^ v1
+		
+		XCTAssertEqual(sut.constraintString , "[view_0(==metric_0@1000)]-[view_1]")
+		XCTAssertEqual(sut.metricDict, ["metric_0":L])
+		XCTAssertEqual(sut.viewDict, ["view_0":v0, "view_1":v1])
+	}
+	
+	func testDHConstraintBuilderViewLengthToFloat() {
+		let v0 = UIView()
+		let L = 5
+		let F = 9.9
+		let sut = DHConstraintBuilder(v0, length: L) ^-^ F
+		
+		XCTAssertEqual(sut.constraintString , "[view_0(==metric_0@1000)]-\(F)")
+		XCTAssertEqual(sut.metricDict, ["metric_0":L])
+		XCTAssertEqual(sut.viewDict, ["view_0":v0])
+	}
+
+	func testDHConstraintBuilderViewLengthToInt() {
+		let v0 = UIView()
+		let L = 5
+		let F = 9
+		let sut = DHConstraintBuilder(v0, length: L) ^-^ F
+		
+		XCTAssertEqual(sut.constraintString , "[view_0(==metric_0@1000)]-\(F)")
+		XCTAssertEqual(sut.metricDict, ["metric_0":L])
+		XCTAssertEqual(sut.viewDict, ["view_0":v0])
+	}
+
+	func testDHConstraintBuilderViewLengthToDHConstraintBuilderViewLength() {
+		let v0 = UIView()
+		let v1 = UIView()
+		let L0 = 5
+		let L1 = 10
+		let sut = DHConstraintBuilder(v0, length: L0) ^-^ DHConstraintBuilder(v1, length: L1)
+		
+		XCTAssertEqual(sut.constraintString , "[view_0(==metric_0@1000)]-[view_1(==metric_1@1000)]")
+		XCTAssertEqual(sut.metricDict, ["metric_0":L0, "metric_1":L1])
+		XCTAssertEqual(sut.viewDict, ["view_0":v0, "view_1":v1])
+	}
+	
+	func testDHConstraintBuilderViewLengthToFloatWithPriority() {
+		let v0 = UIView()
+		let L = 5
+		let F = 9.9
+		let P = 999
+		let sut = DHConstraintBuilder(v0, length: L) ^-^ DHConstraintBuilder(length: F, priority: P)
+		
+		XCTAssertEqual(sut.constraintString , "[view_0(==metric_0@1000)]-metric_1@\(P)")
+		XCTAssertEqual(sut.metricDict, ["metric_0":L, "metric_1":F])
+		XCTAssertEqual(sut.viewDict, ["view_0":v0])
+	}
+	
+	func testDHConstraintBuilderViewLengthToIntWithPriority() {
+		let v0 = UIView()
+		let L = 5
+		let F = 9
+		let P = 999
+		let sut = DHConstraintBuilder(v0, length: L) ^-^ DHConstraintBuilder(length: F, priority: P)
+		
+		XCTAssertEqual(sut.constraintString , "[view_0(==metric_0@1000)]-metric_1@\(P)")
+		XCTAssertEqual(sut.metricDict, ["metric_0":L, "metric_1": F])
+		XCTAssertEqual(sut.viewDict, ["view_0":v0])
+	}
+	
+	func testViewToGreaterThanOrEqualIntLength() {
+		let v0 = UIView()
+		let L0 = 5
+		let relation = DHConstraintRelation.GreaterThanOrEqual.rawValue
+		let sut = v0 ^>=^ L0
+		
+		XCTAssertEqual(sut.constraintString, "[view_0]-\(relation)\(L0)")
+		XCTAssertEqual(sut.metricDict, [:])
+		XCTAssertEqual(sut.viewDict, ["view_0":v0])
+	}
+
+	func testViewToGreaterThanOrEqualFloatLength() {
+		let v0 = UIView()
+		let L0 = 5.6
+		let relation = DHConstraintRelation.GreaterThanOrEqual.rawValue
+		let sut = v0 ^>=^ L0
+		
+		XCTAssertEqual(sut.constraintString, "[view_0]-\(relation)\(L0)")
+		XCTAssertEqual(sut.metricDict, [:])
+		XCTAssertEqual(sut.viewDict, ["view_0":v0])
+	}
+	
+	func testViewToGreaterThanOrEqualFloatLengthWithPriority() {
+		let v0 = UIView()
+		let L0 = 5.6
+		let P = 999
+		let relation = DHConstraintRelation.GreaterThanOrEqual.rawValue
+		let sut = v0 ^>=^ DHConstraintBuilder(length: L0, priority: P)
+		
+		XCTAssertEqual(sut.constraintString, "[view_1]-\(relation)metric_0@\(P)")
+		XCTAssertEqual(sut.metricDict, ["metric_0":L0])
+		XCTAssertEqual(sut.viewDict, ["view_1":v0])
+	}
+
+	func testViewToGreaterThanOrEqualIntLengthWithPriority() {
+		let v0 = UIView()
+		let L0 = 5
+		let P = 999
+		let relation = DHConstraintRelation.GreaterThanOrEqual.rawValue
+		let sut = v0 ^>=^ DHConstraintBuilder(length: L0, priority: P)
+		
+		XCTAssertEqual(sut.constraintString, "[view_1]-\(relation)metric_0@\(P)")
+		XCTAssertEqual(sut.metricDict, ["metric_0":L0])
+		XCTAssertEqual(sut.viewDict, ["view_1":v0])
+	}
+	
+	func testViewToLessThanOrEqualIntLength() {
+		let v0 = UIView()
+		let L0 = 5
+		let relation = DHConstraintRelation.LessThanOrEqual.rawValue
+		let sut = v0 ^<=^ L0
+		
+		XCTAssertEqual(sut.constraintString, "[view_0]-\(relation)\(L0)")
+		XCTAssertEqual(sut.metricDict, [:])
+		XCTAssertEqual(sut.viewDict, ["view_0":v0])
+	}
+	
+	func testViewToLessThanOrEqualFloatLength() {
+		let v0 = UIView()
+		let L0 = 5.6
+		let relation = DHConstraintRelation.LessThanOrEqual.rawValue
+		let sut = v0 ^<=^ L0
+		
+		XCTAssertEqual(sut.constraintString, "[view_0]-\(relation)\(L0)")
+		XCTAssertEqual(sut.metricDict, [:])
+		XCTAssertEqual(sut.viewDict, ["view_0":v0])
+	}
+	
+	func testViewToLessThanOrEqualFloatLengthWithPriority() {
+		let v0 = UIView()
+		let L0 = 5.6
+		let P = 999
+		let relation = DHConstraintRelation.LessThanOrEqual.rawValue
+		let sut = v0 ^<=^ DHConstraintBuilder(length: L0, priority: P)
+		
+		XCTAssertEqual(sut.constraintString, "[view_1]-\(relation)metric_0@\(P)")
+		XCTAssertEqual(sut.metricDict, ["metric_0":L0])
+		XCTAssertEqual(sut.viewDict, ["view_1":v0])
+	}
+	
+	func testViewToLessThanOrEqualIntLengthWithPriority() {
+		let v0 = UIView()
+		let L0 = 5
+		let P = 999
+		let relation = DHConstraintRelation.LessThanOrEqual.rawValue
+		let sut = v0 ^<=^ DHConstraintBuilder(length: L0, priority: P)
+		
+		XCTAssertEqual(sut.constraintString, "[view_1]-\(relation)metric_0@\(P)")
+		XCTAssertEqual(sut.metricDict, ["metric_0":L0])
+		XCTAssertEqual(sut.viewDict, ["view_1":v0])
+	}
+	
+	func testMultipleRelationsLengthsOfView() {
+		let v0 = UIView()
+		let M0 = 10
+		let M1 = 100
+		let sut = DHConstraintBuilder(v0, multipleLengths: [
+			(.GreaterThanOrEqual, length: M0), (.LessThanOrEqual, length: M1)
+		])
+		
+		XCTAssertEqual(sut.constraintString, "[view_0(>=metric_0@1000,<=metric_1@1000)]")
+		XCTAssertEqual(sut.metricDict, ["metric_0":M0, "metric_1":M1])
+		XCTAssertEqual(sut.viewDict, ["view_0":v0])
+	}
+	
+	func testRangeOfLengthsOfView() {
+		let v0 = UIView()
+		let M0 = 10
+		let M1 = 100
+		let sut = DHConstraintBuilder(v0, range: M0...M1)
+		
+		XCTAssertEqual(sut.constraintString, "[view_0(>=metric_0@1000,<=metric_1@1000)]")
+		XCTAssertEqual(sut.metricDict, ["metric_0":M0, "metric_1":M1])
+		XCTAssertEqual(sut.viewDict, ["view_0":v0])
+	}
+	
+	func testInBoundRangeOfLengthsOfView() {
+		let v0 = UIView()
+		let M0 = 10
+		let M1 = 100
+		let sut = DHConstraintBuilder(v0, range: M0..<M1)
+		
+		XCTAssertEqual(sut.constraintString, "[view_0(>=metric_0@1000,<=metric_1@1000)]")
+		XCTAssertEqual(sut.metricDict, ["metric_0":M0, "metric_1":M1-1])
+		XCTAssertEqual(sut.viewDict, ["view_0":v0])
+	}
+	
+	func testViewLengthRelationEqualToViewLength() {
+		let v0 = UIView()
+		let v1 = UIView()
+		let sut = DHConstraintBuilder(v0, .Equal, lengthRelativeToView: v1)
+		                              
+		XCTAssertEqual(sut.constraintString, "[view_0(==viewR_1@1000)]")
+		XCTAssertEqual(sut.viewDict, ["view_0":v0, "viewR_1":v1])
+	}
+	
+	func testViewLengthRelationLessThanOrEqualToViewLength() {
+		let v0 = UIView()
+		let v1 = UIView()
+		let sut = DHConstraintBuilder(v0, .LessThanOrEqual, lengthRelativeToView: v1)
+		
+		XCTAssertEqual(sut.constraintString, "[view_0(<=viewR_1@1000)]")
+		XCTAssertEqual(sut.viewDict, ["view_0":v0, "viewR_1":v1])
+	}
+	
+	func testViewLengthRelationGreaterThanOrEqualToViewLength() {
+		let v0 = UIView()
+		let v1 = UIView()
+		let sut = DHConstraintBuilder(v0, .GreaterThanOrEqual, lengthRelativeToView: v1)
+		
+		XCTAssertEqual(sut.constraintString, "[view_0(>=viewR_1@1000)]")
+		XCTAssertEqual(sut.viewDict, ["view_0":v0, "viewR_1":v1])
+	}
+	
+	func testViewToMultipleGapLengths() {
+		let v0 = UIView()
+		let L1 = 1
+		let L2 = 5
+		let P0 = 1000
+		let P1 = 1000
+		let sut = v0 ^-^ ("(\(DHConstraintBuilder(length: L1)),\(DHConstraintBuilder(length: L2)))" as DHConstraintBuilder)
+		
+		XCTAssertEqual(sut.constraintString, "[view_2]-(metric_0@\(P0),metric_1@\(P1))")
+		XCTAssertEqual(sut.metricDict, ["metric_0": L1, "metric_1": L2])
+		XCTAssertEqual(sut.viewDict, ["view_2":v0])
+	}
+	
+	func testViewInView() {
+		let v = UIView(frame: CGRect(x: 0, y: 0, width: 100, height: 100))
+		let v2 = UIView()
+		v.addConstraints(.H, () |-^ 0 ^-^ v2 ^-^ 0 ^-| ())
+		v.addConstraints(.V, () |-^ 0 ^-^ v2 ^-^ 0 ^-| ())
+		
+		v.layoutIfNeeded()
+		XCTAssertTrue(v.subviews.contains(v2))
+		XCTAssertEqual(v.frame, CGRect(x: 0, y: 0, width: 100, height: 100))
+		XCTAssertEqual(v2.frame, CGRect(x: 0, y: 0, width: 100, height: 100))
+	}
+	
+	func testviewInViewChaining() {
+		let v0 = UIView(frame: CGRect(x: 0, y: 0, width: 100, height: 100))
+		let v1 = UIView()
+		let v2 = UIView()
+		v0.addConstraints(.H, () |-^ 0 ^-^ v1 ^-^ 10 ^-^ v2 ^-^ 0 ^-| ())
+		v0.addConstraints(.V, () |-^ 0 ^-^ v1 ^-^ 0 ^-| ())
+		v0.addConstraints(.V, () |-^ 0 ^-^ v2 ^-^ 0 ^-| ())
+		v0.addConstraints(.H, DHConstraintBuilder(v1, lengthRelativeToView: v2))
+		
+		v0.layoutIfNeeded()
+		XCTAssertTrue(v0.subviews.contains(v1))
+		XCTAssertTrue(v0.subviews.contains(v2))
+		XCTAssertEqual(v0.frame, CGRect(x: 0, y: 0, width: 100, height: 100))
+		XCTAssertEqual(v1.frame, CGRect(x: 0, y: 0, width: 45, height: 100))
+		XCTAssertEqual(v2.frame, CGRect(x: 55, y: 0, width: 45, height: 100))
+	}	
 }
