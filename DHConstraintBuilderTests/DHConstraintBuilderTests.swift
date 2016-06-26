@@ -9,6 +9,12 @@
 import XCTest
 @testable import DHConstraintBuilder
 
+extension String {
+	var noNumericalInformation: String {
+		return componentsSeparatedByCharactersInSet(.decimalDigitCharacterSet()).reduce("", combine: +)
+	}
+}
+
 class DHConstraintBuilderTests: XCTestCase {
     
     override func setUp() {
@@ -145,8 +151,48 @@ class DHConstraintBuilderTests: XCTestCase {
 			XCTAssertEqual(lengthWithPriority.metricDict["metric_15"]! as? Int, 100)
 			XCTAssertEqual(lengthWithPriority.viewDict["view_14"], v)
 		}
-    }
-    
-
+		do {
+			XCTAssertEqual((() |-^ 5).constraintString , "|-5")
+			XCTAssertEqual((() |-^ 5.5).constraintString , "|-5.5")
+			XCTAssertEqual((() |-^ UIView()).constraintString , "|-[view_16]")
+			
+			XCTAssertEqual((5 ^-| ()).constraintString , "5-|")
+			XCTAssertEqual((5.5 ^-| ()).constraintString , "5.5-|")
+			XCTAssertEqual(((UIView() ^-| ()).constraintString) , "[view_17]-|")
+			
+			XCTAssertEqual((UIView() ^-^ 5).constraintString , "[view_18]-5")
+			XCTAssertEqual(((UIView() ^-^ 5.5).constraintString) , "[view_19]-5.5")
+			XCTAssertEqual(((UIView() ^-^ UIView()).constraintString) , "[view_20]-[view_21]")
+		
+			XCTAssertEqual((UIView() ^>=^ 5).constraintString , "[view_22]->=5")
+			XCTAssertEqual(((UIView() ^>=^ 5.5).constraintString) , "[view_23]->=5.5")
+			
+			XCTAssertEqual((UIView() ^<=^ 5).constraintString , "[view_24]-<=5")
+			XCTAssertEqual(((UIView() ^<=^ 5.5).constraintString) , "[view_25]-<=5.5")
+		}
+		do {
+			XCTAssertEqual(DHConstraintBuilder(length: 8.8).constraintString, "metric_26@1000")
+			XCTAssertEqual(DHConstraintBuilder(UIView(), length: 8.8).constraintString, "[view_27(==metric_27@1000)]")
+			XCTAssertEqual(DHConstraintBuilder(UIView(), multipleLengths: [(.Equal, length: 8.8)]).constraintString, "[view_28(==metric_28@1000)]")
+			XCTAssertEqual(DHConstraintBuilder(UIView(), multipleLengths: [(.GreaterThanOrEqual, length: 10.0), (.LessThanOrEqual, length: 20.0)]).constraintString, "[view_29(>=metric_29@1000, <=metric_30@1000)]")
+			
+			XCTAssertEqual(DHConstraintBuilder(UIView(), .Equal, lengthRelativeToView: UIView()).constraintString, "[view_31(==viewR_32@1000)]")
+			XCTAssertEqual(DHConstraintBuilder(UIView(), .GreaterThanOrEqual, lengthRelativeToView: UIView()).constraintString, "[view_33(>=viewR_34@1000)]")
+			XCTAssertEqual(DHConstraintBuilder(UIView(), .LessThanOrEqual, lengthRelativeToView: UIView()).constraintString, "[view_35(<=viewR_36@1000)]")
+			
+			
+		}
+		do {
+			let v = UIView(frame: CGRect(x: 0, y: 0, width: 100, height: 100))
+			let v2 = UIView()
+			v.addConstraints(.H, () |-^ 0 ^-^ v2 ^-^ 0 ^-| ())
+			v.addConstraints(.V, () |-^ 0 ^-^ v2 ^-^ 0 ^-| ())
+			
+			v.layoutIfNeeded()
+			XCTAssertTrue(v.subviews.contains(v2))
+			XCTAssertEqual(v.frame, CGRect(x: 0, y: 0, width: 100, height: 100))
+			XCTAssertEqual(v2.frame, CGRect(x: 0, y: 0, width: 100, height: 100))
+		}
+	}
     
 }
