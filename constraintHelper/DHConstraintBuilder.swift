@@ -53,40 +53,7 @@ let view5 = UIView()
 view3.addConstraints(view4 ^-^ 8 ^-^ view5) // view1 is 8 units away from view2
 ```
 */
-public func ^-^(lhs: DHConstraintBuilder, rhs: DHConstraintBuilder) -> DHConstraintBuilder {
-	return "\(lhs)-\(rhs)"
-}
-public func ^-^(lhs: DHConstraintBuilder, rhs: UIView) -> DHConstraintBuilder {
-	return "\(lhs)-\(rhs)"
-}
-public func ^-^(lhs: DHConstraintBuilder, rhs: Int) -> DHConstraintBuilder {
-	return "\(lhs)-\(rhs)"
-}
-public func ^-^<U: FloatingPointType>(lhs: DHConstraintBuilder, rhs: U) -> DHConstraintBuilder {
-	return "\(lhs)-\(rhs)"
-}
-public func ^-^(lhs: UIView, rhs: DHConstraintBuilder) -> DHConstraintBuilder {
-	return "\(lhs)-\(rhs)"
-}
-public func ^-^(lhs: UIView, rhs: UIView) -> DHConstraintBuilder {
-	return "\(lhs)-\(rhs)"
-}
-public func ^-^(lhs: UIView, rhs: Int) -> DHConstraintBuilder {
-	return "\(lhs)-\(rhs)"
-}
-public func ^-^<U: FloatingPointType>(lhs: UIView, rhs: U) -> DHConstraintBuilder {
-	return "\(lhs)-\(rhs)"
-}
-public func ^-^(lhs: Int, rhs: DHConstraintBuilder) -> DHConstraintBuilder {
-	return "\(lhs)-\(rhs)"
-}
-public func ^-^(lhs: Int, rhs: UIView) -> DHConstraintBuilder {
-	return "\(lhs)-\(rhs)"
-}
-public func ^-^<U: FloatingPointType>(lhs: U, rhs: DHConstraintBuilder) -> DHConstraintBuilder {
-	return "\(lhs)-\(rhs)"
-}
-public func ^-^<U: FloatingPointType>(lhs: U, rhs: UIView) -> DHConstraintBuilder {
+public func ^-^<T,U>(lhs: T, rhs: U) -> DHConstraintBuilder {
 	return "\(lhs)-\(rhs)"
 }
 
@@ -99,16 +66,7 @@ let view2 = UIView()
 view1.addConstraints(() |-^ view2)
 ```
 */
-public func |-^(lhs: Void, rhs: DHConstraintBuilder) -> DHConstraintBuilder {
-	return "|-\(rhs)"
-}
-public func |-^(lhs: Void, rhs: UIView) -> DHConstraintBuilder {
-	return "|-\(rhs)"
-}
-public func |-^(lhs: Void, rhs: Int) -> DHConstraintBuilder {
-	return "|-\(rhs)"
-}
-public func |-^<U: FloatingPointType>(lhs: Void, rhs: U) -> DHConstraintBuilder {
+public func |-^<T>(lhs: (Void), rhs: T) -> DHConstraintBuilder {
 	return "|-\(rhs)"
 }
 
@@ -121,16 +79,7 @@ let view2 = UIView()
 view1.addConstraints(view2 ^-| ())
 ```
 */
-public func ^-|(lhs: DHConstraintBuilder, rhs: Void) -> DHConstraintBuilder {
-	return "\(lhs)-|"
-}
-public func ^-|(lhs: UIView, rhs: Void) -> DHConstraintBuilder {
-	return "\(lhs)-|"
-}
-public func ^-|(lhs: Int, rhs: Void) -> DHConstraintBuilder {
-	return "\(lhs)-|"
-}
-public func ^-|<U: FloatingPointType>(lhs: U, rhs: Void) -> DHConstraintBuilder {
+public func ^-|<T>(lhs: T, rhs: (Void)) -> DHConstraintBuilder {
 	return "\(lhs)-|"
 }
 
@@ -144,40 +93,7 @@ let view2 = UIView()
 view0.addConstraints(view1 ^>=^ 8 ^-^ view2) // view1 is >=8 units away from view2
 ```
 */
-public func ^>=^(lhs: DHConstraintBuilder, rhs: DHConstraintBuilder) -> DHConstraintBuilder {
-	return "\(lhs)->=\(rhs)"
-}
-public func ^>=^(lhs: DHConstraintBuilder, rhs: UIView) -> DHConstraintBuilder {
-	return "\(lhs)->=\(rhs)"
-}
-public func ^>=^(lhs: DHConstraintBuilder, rhs: Int) -> DHConstraintBuilder {
-	return "\(lhs)->=\(rhs)"
-}
-public func ^>=^<U: FloatingPointType>(lhs: DHConstraintBuilder, rhs: U) -> DHConstraintBuilder {
-	return "\(lhs)->=\(rhs)"
-}
-public func ^>=^(lhs: UIView, rhs: DHConstraintBuilder) -> DHConstraintBuilder {
-	return "\(lhs)->=\(rhs)"
-}
-public func ^>=^(lhs: UIView, rhs: UIView) -> DHConstraintBuilder {
-	return "\(lhs)->=\(rhs)"
-}
-public func ^>=^(lhs: UIView, rhs: Int) -> DHConstraintBuilder {
-	return "\(lhs)->=\(rhs)"
-}
-public func ^>=^<U: FloatingPointType>(lhs: UIView, rhs: U) -> DHConstraintBuilder {
-	return "\(lhs)->=\(rhs)"
-}
-public func ^>=^(lhs: Int, rhs: DHConstraintBuilder) -> DHConstraintBuilder {
-	return "\(lhs)->=\(rhs)"
-}
-public func ^>=^(lhs: Int, rhs: UIView) -> DHConstraintBuilder {
-	return "\(lhs)->=\(rhs)"
-}
-public func ^>=^<U: FloatingPointType>(lhs: U, rhs: DHConstraintBuilder) -> DHConstraintBuilder {
-	return "\(lhs)->=\(rhs)"
-}
-public func ^>=^<U: FloatingPointType>(lhs: U, rhs: UIView) -> DHConstraintBuilder {
+public func ^>=^<T, U>(lhs: T, rhs: U) -> DHConstraintBuilder {
 	return "\(lhs)->=\(rhs)"
 }
 
@@ -191,40 +107,7 @@ let view2 = UIView()
 view0.addConstraints(view1 ^<=^ 8 ^-^ view2) // view1 is <=8 units away from view2
 ```
 */
-public func ^<=^(lhs: DHConstraintBuilder, rhs: DHConstraintBuilder) -> DHConstraintBuilder {
-	return "\(lhs)-<=\(rhs)"
-}
-public func ^<=^(lhs: DHConstraintBuilder, rhs: UIView) -> DHConstraintBuilder {
-	return "\(lhs)-<=\(rhs)"
-}
-public func ^<=^(lhs: DHConstraintBuilder, rhs: Int) -> DHConstraintBuilder {
-	return "\(lhs)-<=\(rhs)"
-}
-public func ^<=^<U: FloatingPointType>(lhs: DHConstraintBuilder, rhs: U) -> DHConstraintBuilder {
-	return "\(lhs)-<=\(rhs)"
-}
-public func ^<=^(lhs: UIView, rhs: DHConstraintBuilder) -> DHConstraintBuilder {
-	return "\(lhs)-<=\(rhs)"
-}
-public func ^<=^(lhs: UIView, rhs: UIView) -> DHConstraintBuilder {
-	return "\(lhs)-<=\(rhs)"
-}
-public func ^<=^(lhs: UIView, rhs: Int) -> DHConstraintBuilder {
-	return "\(lhs)-<=\(rhs)"
-}
-public func ^<=^<U: FloatingPointType>(lhs: UIView, rhs: U) -> DHConstraintBuilder {
-	return "\(lhs)-<=\(rhs)"
-}
-public func ^<=^(lhs: Int, rhs: DHConstraintBuilder) -> DHConstraintBuilder {
-	return "\(lhs)-<=\(rhs)"
-}
-public func ^<=^(lhs: Int, rhs: UIView) -> DHConstraintBuilder {
-	return "\(lhs)-<=\(rhs)"
-}
-public func ^<=^<U: FloatingPointType>(lhs: U, rhs: DHConstraintBuilder) -> DHConstraintBuilder {
-	return "\(lhs)-<=\(rhs)"
-}
-public func ^<=^<U: FloatingPointType>(lhs: U, rhs: UIView) -> DHConstraintBuilder {
+public func ^<=^<T, U>(lhs: T, rhs: U) -> DHConstraintBuilder {
 	return "\(lhs)-<=\(rhs)"
 }
 
