@@ -197,7 +197,7 @@ public struct DHConstraintBuilder: StringInterpolationConvertible {
 		var offset = -1
 		let metricString = multipleLengths.reduce("") {
 			offset += 1
-			let spacer = $0.isEmpty ? "" : ", "
+			let spacer = $0.isEmpty ? "" : ","
 			return $0 + spacer + "\($1.0.rawValue)metric_\(uuid + offset)@\($1.priority)"
 		}
 		constraintString = "[view_\(uuid)(\(metricString))]"
@@ -239,7 +239,7 @@ public struct DHConstraintBuilder: StringInterpolationConvertible {
 		var offset = -1
 		let metricString = multipleLengths.reduce("") {
 			offset += 1
-			let spacer = $0.isEmpty ? "" : ", "
+			let spacer = $0.isEmpty ? "" : ","
 			return $0 + spacer + "\($1.0.rawValue)metric_\(uuid + offset)@\($1.priority)"
 		}
 		constraintString = "[view_\(uuid)(\(metricString))]"
