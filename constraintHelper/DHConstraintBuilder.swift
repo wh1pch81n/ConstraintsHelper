@@ -177,31 +177,25 @@ public struct DHConstraintBuilder: StringInterpolationConvertible {
 		constraintString = "metric_\(uuid)@\(priority)"
 	}
 	
-	public init(_ view: UIView, _ lengthRelation: DHConstraintRelation = .Equal, length: NSNumber, priority: Int = 1000) {
+	public init(_ view: UIView, _ relation: DHConstraintRelation) {
 		let uuid = __.count
 		__.count = __.count &+ 1
 		viewDict = ["view_\(uuid)" : view]
-		metricDict = ["metric_\(uuid)" : length]
-		constraintString = "[view_\(uuid)(\(lengthRelation.rawValue)metric_\(uuid)@\(priority))]"
-	}
-	
-	public init(_ view: UIView, multipleLengths: [(relation: DHConstraintRelation, length: NSNumber)]) {
-		self.init(view, multipleLengths: multipleLengths.map({ ($0, $1, 1000) }))
+		metricDict = ["metric_\(uuid)" : relation.length]
+		constraintString = "[view_\(uuid)(\(relation.relation)metric_\(uuid)@\(relation.priority))]"
 	}
 	
 	public init(_ view: UIView, range r: Range<Int>) {
-		self.init(view, multipleLengths: [
-			(.GreaterThanOrEqual, length: r.startIndex), (.LessThanOrEqual, length: r.endIndex - 1)
-		])
+		self.init(view, .GreaterThanOrEqual1(to: r.startIndex), .LessThanOrEqual1(to: r.endIndex - 1))
 	}
 
-	public init(_ view: UIView, multipleLengths: [(DHConstraintRelation, length: NSNumber, priority: Int)]) {
-		assert(multipleLengths.count > 0, "Needs at least one")
+	public init(_ view: UIView, _ relations: DHConstraintRelation...) {
+		assert(relations.count > 0, "Needs at least one")
 		let uuid = __.count
 		viewDict = ["view_\(uuid)" : view]
 		
 		var _metricDict = Dictionary<String, NSNumber>()
-		multipleLengths.forEach {
+		relations.forEach {
 			_metricDict["metric_\(__.count)"] = $0.length
 			__.count = __.count &+ 1
 		}
@@ -209,15 +203,15 @@ public struct DHConstraintBuilder: StringInterpolationConvertible {
 		metricDict = _metricDict
 		
 		var offset = -1
-		let metricString = multipleLengths.reduce("") {
+		let metricString = relations.reduce("") {
 			offset += 1
 			let spacer = $0.isEmpty ? "" : ","
-			return $0 + spacer + "\($1.0.rawValue)metric_\(uuid + offset)@\($1.priority)"
+			return $0 + spacer + "\($1.relation)metric_\(uuid + offset)@\($1.priority)"
 		}
 		constraintString = "[view_\(uuid)(\(metricString))]"
 	}
 	
-	public init(_ view: UIView, _ lengthRelation: DHConstraintRelation = .Equal, lengthRelativeToView: UIView, priority: Int = 1000) {
+	public init(_ view: UIView, _ relation: DHConstraintRelation = .Equal, lengthRelativeToView: UIView) {
 		let uuid = __.count
 		__.count = __.count &+ 1
 		let uuid2 = __.count
@@ -227,15 +221,66 @@ public struct DHConstraintBuilder: StringInterpolationConvertible {
 			"viewR_\(uuid2)" : lengthRelativeToView
 		]
 		metricDict = [:]
-		constraintString = "[view_\(uuid)(\(lengthRelation.rawValue)viewR_\(uuid2)@\(priority))]"
+		constraintString = "[view_\(uuid)(\(relation.relation)viewR_\(uuid2)@\(relation.priority))]"
 	}
 	
 }
 
-public enum DHConstraintRelation: String {
-	case Equal = "=="
-	case GreaterThanOrEqual = ">="
-	case LessThanOrEqual = "<="
+public enum DHConstraintRelation {
+	case GreaterThanOrEqual
+	case GreaterThanOrEqual1(to: NSNumber)
+	case GreaterThanOrEqual2(to: NSNumber, priority: Int)
+	
+	case LessThanOrEqual
+	case LessThanOrEqual1(to: NSNumber)
+	case LessThanOrEqual2(to: NSNumber, priority: Int)
+	
+	case Equal
+	case Equal1(to: NSNumber)
+	case Equal2(to: NSNumber, priority: Int)
+	
+	var relation: String {
+		switch self {
+		case .GreaterThanOrEqual, .GreaterThanOrEqual1, .GreaterThanOrEqual2:
+			return ">="
+		case .LessThanOrEqual, .LessThanOrEqual1, .LessThanOrEqual2:
+			return "<="
+		case .Equal, .Equal1, .Equal2:
+			return "=="
+		}
+	}
+	
+	var length: NSNumber {
+		switch self {
+		case .GreaterThanOrEqual1(to: let n):
+			return n
+		case .GreaterThanOrEqual2(to: let n, priority: _):
+			return n
+		case .LessThanOrEqual1(to: let n):
+			return n
+		case .LessThanOrEqual2(to: let n, priority: _):
+			return n
+		case .Equal1(to: let n):
+			return n
+		case .Equal2(to: let n, priority: _):
+			return n
+		default:
+			return 0
+		}
+	}
+	
+	var priority: Int {
+		switch self {
+		case .GreaterThanOrEqual2(to: _, priority: let p):
+			return p
+		case .LessThanOrEqual2(to: _, priority: let p):
+			return p
+		case .Equal2(to: _, priority: let p):
+			return p
+		default:
+			return 1000
+		}
+	}
 }
 
 public enum DHConstraintDirection: String {
