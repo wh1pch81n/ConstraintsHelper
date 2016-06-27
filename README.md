@@ -23,7 +23,7 @@ view_cb.addConstraints(.H, DHConstraintBuilder(greenView_cb, lengthRelativeToVie
 view_cb.addConstraints(.V, DHConstraintBuilder(greenView_cb, lengthRelativeToView: blueView_cb))
 ```
 
-The eqivalent using NSLayoutConstraint.constraintsWithVisualFormat(_ :options:metrics:views) would look like this:
+The equivalent using NSLayoutConstraint.constraintsWithVisualFormat(_ :options:metrics:views) would look like this:
 
 ```
 let viewArray = [
@@ -48,5 +48,3 @@ view_vf.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|-[redV
 greenView_vf.widthAnchor.constraintEqualToAnchor(redView_vf.widthAnchor).active = true
 greenView_vf.heightAnchor.constraintEqualToAnchor(blueView_vf.heightAnchor).active = true
 ```
-
-As you can see from the example above, adding a view as a subview can be inferred and the translateAutoResizingMaskToConstraints property is automatically set to false
