@@ -9,7 +9,7 @@ github "wh1pch81n/DHConstraintBuilder" "1.0.0"
 
 You can make constraints like this one:
 
-![alt text][http://www.github.com/wh1pch81n/BoxyBoxxy/ViewExample.png]
+![alt text](https://github.com/wh1pch81n/BoxyBoxy/blob/master/ViewExample.png)
 
 Using code like this:
 ```swift
