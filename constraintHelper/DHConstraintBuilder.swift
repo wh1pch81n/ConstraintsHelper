@@ -130,9 +130,9 @@ public struct DHConstraintBuilder: StringInterpolationConvertible {
 	
 	/// every segment created by init<T>(stringInterpolationSegment expr: T) will come here as an array of Segments.
 	public init(stringInterpolation strings: DHConstraintBuilder...) {
-		constraintString = strings.map({ $0.constraintString }).reduce("", combine: +)
-		viewDict = strings.map({ $0.viewDict }).reduce([:], combine:+)
-		metricDict = strings.map({ $0.metricDict }).reduce([:], combine:+)
+		constraintString = strings.map({ $0.constraintString }).reduce("", +)
+		viewDict = strings.map({ $0.viewDict }).reduce([:], +)
+		metricDict = strings.map({ $0.metricDict }).reduce([:], +)
 	}
 	
 	/// the string literal is broken up into intervals of all string and \(..) which are called segments
@@ -155,7 +155,7 @@ public struct DHConstraintBuilder: StringInterpolationConvertible {
 		} else {
 			viewDict = [:]
 			metricDict = [:]
-			constraintString = "\(String(expr))"
+			constraintString = "\(String(describing: expr))"
 		}
 	}
 	
@@ -185,9 +185,9 @@ public struct DHConstraintBuilder: StringInterpolationConvertible {
 		constraintString = "[view_\(uuid)(\(relation.relation)metric_\(uuid)@\(relation.priority))]"
 	}
 	
-	public init(_ view: UIView, range r: Range<Int>) {
-		self.init(view, .GreaterThanOrEqual1(to: r.startIndex), .LessThanOrEqual1(to: r.endIndex - 1))
-	}
+	//public init(_ view: UIView, range r: Range<Int>) {
+	//	self.init(view, .greaterThanOrEqual1(to: NSNumber(r.lowerBound)), .lessThanOrEqual1(to: r.upperBound - 1))
+	//}
 
 	public init(_ view: UIView, _ relations: DHConstraintRelation...) {
 		assert(relations.count > 0, "Needs at least one")
@@ -211,7 +211,7 @@ public struct DHConstraintBuilder: StringInterpolationConvertible {
 		constraintString = "[view_\(uuid)(\(metricString))]"
 	}
 	
-	public init(_ view: UIView, _ relation: DHConstraintRelation = .Equal, lengthRelativeToView: UIView) {
+	public init(_ view: UIView, _ relation: DHConstraintRelation = .equal, lengthRelativeToView: UIView) {
 		let uuid = __.count
 		__.count = __.count &+ 1
 		let uuid2 = __.count
@@ -227,42 +227,42 @@ public struct DHConstraintBuilder: StringInterpolationConvertible {
 }
 
 public enum DHConstraintRelation {
-	case GreaterThanOrEqual
-	case GreaterThanOrEqual1(to: NSNumber)
-	case GreaterThanOrEqual2(to: NSNumber, priority: Int)
+	case greaterThanOrEqual
+	case greaterThanOrEqual1(to: NSNumber)
+	case greaterThanOrEqual2(to: NSNumber, priority: Int)
 	
-	case LessThanOrEqual
-	case LessThanOrEqual1(to: NSNumber)
-	case LessThanOrEqual2(to: NSNumber, priority: Int)
+	case lessThanOrEqual
+	case lessThanOrEqual1(to: NSNumber)
+	case lessThanOrEqual2(to: NSNumber, priority: Int)
 	
-	case Equal
-	case Equal1(to: NSNumber)
-	case Equal2(to: NSNumber, priority: Int)
+	case equal
+	case equal1(to: NSNumber)
+	case equal2(to: NSNumber, priority: Int)
 	
 	var relation: String {
 		switch self {
-		case .GreaterThanOrEqual, .GreaterThanOrEqual1, .GreaterThanOrEqual2:
+		case .greaterThanOrEqual, .greaterThanOrEqual1, .greaterThanOrEqual2:
 			return ">="
-		case .LessThanOrEqual, .LessThanOrEqual1, .LessThanOrEqual2:
+		case .lessThanOrEqual, .lessThanOrEqual1, .lessThanOrEqual2:
 			return "<="
-		case .Equal, .Equal1, .Equal2:
+		case .equal, .equal1, .equal2:
 			return "=="
 		}
 	}
 	
 	var length: NSNumber {
 		switch self {
-		case .GreaterThanOrEqual1(to: let n):
+		case .greaterThanOrEqual1(to: let n):
 			return n
-		case .GreaterThanOrEqual2(to: let n, priority: _):
+		case .greaterThanOrEqual2(to: let n, priority: _):
 			return n
-		case .LessThanOrEqual1(to: let n):
+		case .lessThanOrEqual1(to: let n):
 			return n
-		case .LessThanOrEqual2(to: let n, priority: _):
+		case .lessThanOrEqual2(to: let n, priority: _):
 			return n
-		case .Equal1(to: let n):
+		case .equal1(to: let n):
 			return n
-		case .Equal2(to: let n, priority: _):
+		case .equal2(to: let n, priority: _):
 			return n
 		default:
 			return 0
@@ -271,11 +271,11 @@ public enum DHConstraintRelation {
 	
 	var priority: Int {
 		switch self {
-		case .GreaterThanOrEqual2(to: _, priority: let p):
+		case .greaterThanOrEqual2(to: _, priority: let p):
 			return p
-		case .LessThanOrEqual2(to: _, priority: let p):
+		case .lessThanOrEqual2(to: _, priority: let p):
 			return p
-		case .Equal2(to: _, priority: let p):
+		case .equal2(to: _, priority: let p):
 			return p
 		default:
 			return 1000
@@ -310,7 +310,7 @@ extension UIView {
 			}
 		})
 		addConstraints(
-			NSLayoutConstraint.constraintsWithVisualFormat("\(direction.rawValue)\(constraints.constraintString)",
+			NSLayoutConstraint.constraints(withVisualFormat: "\(direction.rawValue)\(constraints.constraintString)",
 			options: constraints.options,
 			metrics: constraints.metricDict,
 			views: constraints.viewDict))
