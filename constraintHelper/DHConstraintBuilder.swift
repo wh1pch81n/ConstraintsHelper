@@ -35,11 +35,16 @@ private func +<VALUE>(a: [String:VALUE], b: [String:VALUE]) -> [String:VALUE] {
 	return d
 }
 
-infix operator ^-^ { associativity left precedence 140 }
-infix operator |-^ { associativity left }
-infix operator ^-| { associativity left }
-infix operator ^>=^ { associativity left precedence 140 }
-infix operator ^<=^ { associativity left precedence 140 }
+precedencegroup ConstraintBuilder {
+	associativity: left
+	higherThan: AdditionPrecedence
+}
+
+infix operator ^-^ : ConstraintBuilder
+infix operator |-^ : ConstraintBuilder
+infix operator ^-| : ConstraintBuilder
+infix operator ^>=^ : ConstraintBuilder
+infix operator ^<=^ : ConstraintBuilder
 
 /** 
 Short hand for linking two DHConstraintBuilder Objects 
@@ -56,7 +61,7 @@ let view5 = UIView()
 view3.addConstraints(view4 ^-^ 8 ^-^ view5) // view1 is 8 units away from view2
 ```
 */
-public func ^-^<T,U>(lhs: T, rhs: U) -> DHConstraintBuilder {
+public func ^-^<T: DHConstraintBuildable,U: DHConstraintBuildable>(lhs: T, rhs: U) -> DHConstraintBuilder {
 	return "\(lhs)-\(rhs)"
 }
 
@@ -69,7 +74,7 @@ let view2 = UIView()
 view1.addConstraints(() |-^ view2)
 ```
 */
-public func |-^<T>(lhs: (Void), rhs: T) -> DHConstraintBuilder {
+public func |-^<T: DHConstraintBuildable>(lhs: (Void), rhs: T) -> DHConstraintBuilder {
 	return "|-\(rhs)"
 }
 
@@ -82,7 +87,7 @@ let view2 = UIView()
 view1.addConstraints(view2 ^-| ())
 ```
 */
-public func ^-|<T>(lhs: T, rhs: (Void)) -> DHConstraintBuilder {
+public func ^-|<T: DHConstraintBuildable>(lhs: T, rhs: (Void)) -> DHConstraintBuilder {
 	return "\(lhs)-|"
 }
 
@@ -96,7 +101,7 @@ let view2 = UIView()
 view0.addConstraints(view1 ^>=^ 8 ^-^ view2) // view1 is >=8 units away from view2
 ```
 */
-public func ^>=^<T, U>(lhs: T, rhs: U) -> DHConstraintBuilder {
+public func ^>=^<T: DHConstraintBuildable, U: DHConstraintBuildable>(lhs: T, rhs: U) -> DHConstraintBuilder {
 	return "\(lhs)->=\(rhs)"
 }
 
@@ -110,9 +115,18 @@ let view2 = UIView()
 view0.addConstraints(view1 ^<=^ 8 ^-^ view2) // view1 is <=8 units away from view2
 ```
 */
-public func ^<=^<T, U>(lhs: T, rhs: U) -> DHConstraintBuilder {
+public func ^<=^<T: DHConstraintBuildable, U: DHConstraintBuildable>(lhs: T, rhs: U) -> DHConstraintBuilder {
 	return "\(lhs)-<=\(rhs)"
 }
+
+public protocol DHConstraintBuildable {}
+public protocol DHConstraintScalar {}
+
+extension DHConstraintBuilder: DHConstraintBuildable {}
+extension UIView: DHConstraintBuildable {}
+extension Int: DHConstraintBuildable, DHConstraintScalar {}
+extension Float: DHConstraintBuildable, DHConstraintScalar {}
+extension Double: DHConstraintBuildable, DHConstraintScalar {}
 
 public struct DHConstraintBuilder: StringInterpolationConvertible {
 	/// The Generated Constraint String
@@ -121,7 +135,7 @@ public struct DHConstraintBuilder: StringInterpolationConvertible {
 	/// Align all views according to NSLayoutFormatOptions
 	public var options: NSLayoutFormatOptions = NSLayoutFormatOptions(rawValue: 0)
 	/// Holds accumulated metric data
-	let metricDict: [String : NSNumber]
+	let metricDict: [String : DHConstraintScalar]
 	/// Holds accumulated view data
 	let viewDict: [String : UIView]
 	struct __ {
@@ -169,7 +183,7 @@ public struct DHConstraintBuilder: StringInterpolationConvertible {
 	
 	*/
 	
-	public init(length: NSNumber, priority: Int = 1000) {
+	public init(length: DHConstraintScalar, priority: Int = 1000) {
 		let uuid = __.count
 		__.count = __.count &+ 1
 		viewDict = [:]
@@ -194,7 +208,7 @@ public struct DHConstraintBuilder: StringInterpolationConvertible {
 		let uuid = __.count
 		viewDict = ["view_\(uuid)" : view]
 		
-		var _metricDict = Dictionary<String, NSNumber>()
+		var _metricDict = Dictionary<String, DHConstraintScalar>()
 		relations.forEach {
 			_metricDict["metric_\(__.count)"] = $0.length
 			__.count = __.count &+ 1
@@ -228,16 +242,16 @@ public struct DHConstraintBuilder: StringInterpolationConvertible {
 
 public enum DHConstraintRelation {
 	case greaterThanOrEqual
-	case greaterThanOrEqual1(to: NSNumber)
-	case greaterThanOrEqual2(to: NSNumber, priority: Int)
+	case greaterThanOrEqual1(to: DHConstraintScalar)
+	case greaterThanOrEqual2(to: DHConstraintScalar, priority: Int)
 	
 	case lessThanOrEqual
-	case lessThanOrEqual1(to: NSNumber)
-	case lessThanOrEqual2(to: NSNumber, priority: Int)
+	case lessThanOrEqual1(to: DHConstraintScalar)
+	case lessThanOrEqual2(to: DHConstraintScalar, priority: Int)
 	
 	case equal
-	case equal1(to: NSNumber)
-	case equal2(to: NSNumber, priority: Int)
+	case equal1(to: DHConstraintScalar)
+	case equal2(to: DHConstraintScalar, priority: Int)
 	
 	var relation: String {
 		switch self {
@@ -250,7 +264,7 @@ public enum DHConstraintRelation {
 		}
 	}
 	
-	var length: NSNumber {
+	var length: DHConstraintScalar {
 		switch self {
 		case .greaterThanOrEqual1(to: let n):
 			return n
@@ -317,3 +331,58 @@ extension UIView {
 	}
 }
 
+@objc
+class DHConstraintBuilderObjc: NSObject {
+	var constraintBuilder: DHConstraintBuilder!
+
+	class func parentView(to view: UIView) -> DHConstraintBuilderObjc {
+		return _parentView(to: view)
+	}
+	class func parentView(to view: UIView, with gapLength: Int) -> DHConstraintBuilderObjc {
+		return _parentView(to: view, with: gapLength)
+	}
+	class func parentView(to view: UIView, with gapLength: Int, with priority: Int) -> DHConstraintBuilderObjc {
+		return _parentView(to: view, with: gapLength, with: priority)
+	}
+	private class func _parentView(to view: UIView, with gapLength: Int? = nil, with priority: Int? = nil) -> DHConstraintBuilderObjc {
+		let v = DHConstraintBuilderObjc()
+		switch (gapLength, priority) {
+		case let (l?, p?):
+			v.constraintBuilder = () |-^ DHConstraintBuilder(length: l, priority: p) ^-^ view
+		case let (l?, .none):
+			v.constraintBuilder = () |-^ DHConstraintBuilder(length: l) ^-^ view
+		case (.none, .some),
+		     (.none, .none):
+			v.constraintBuilder = () |-^ view
+		}
+		return v
+	}
+	
+	//class func view(_ view: UIView, with gapLength: Int? = nil, with priority: Int? = nil, to )
+	
+	func to(view: UIView, with gapLength: Int? = nil, with priority: Int? = nil) -> DHConstraintBuilderObjc {
+		switch (gapLength, priority) {
+		case let (l?, p?):
+			constraintBuilder = constraintBuilder! ^-^ DHConstraintBuilder(length: l, priority: p) ^-^ view
+		case let (l?, .none):
+			constraintBuilder = constraintBuilder! ^-^ DHConstraintBuilder(length: l) ^-^ view
+		case (.none, .some),
+		     (.none, .none):
+			constraintBuilder = constraintBuilder! ^-^ view
+		}
+		return self
+	}
+	
+	func parentViewFrom(view: UIView, with gapLength: Int? = nil, with priority: Int? = nil) -> DHConstraintBuilderObjc {
+		switch (gapLength, priority) {
+		case let (l?, p?):
+			constraintBuilder = view ^-^ DHConstraintBuilder(length: l, priority: p) ^-| ()
+		case let (l?, .none):
+			constraintBuilder = view ^-^ DHConstraintBuilder(length: l) ^-| ()
+		case (.none, .some),
+		     (.none, .none):
+			constraintBuilder = view ^-| ()
+		}
+		return self
+	}
+}
