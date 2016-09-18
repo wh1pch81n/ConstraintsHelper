@@ -313,21 +313,28 @@ extension UIView {
 		- constraints: The DHConstraintBuilder object.
 		- setAllViewsTranslatesAutoresizingMaskIntoConstraintsToFalse: By default this value is true.  If this value is true, then every view specified in the DHConstraintBuilder constraintString will have it's __translatesAutoresizingMaskIntoConstraints__ property set to false.  If this value is false then the value of each view's __translatesAutoresizingMaskIntoConstraints__ will be untouched.
 	*/
-	public func addConstraints(_ direction: DHConstraintDirection, _ constraints: DHConstraintBuilder, setAllViewsTranslatesAutoresizingMaskIntoConstraintsToFalse: Bool = true) {
-		constraints.viewDict.forEach({
-			if setAllViewsTranslatesAutoresizingMaskIntoConstraintsToFalse {
-				$1.translatesAutoresizingMaskIntoConstraints = false
-			}
-			
-			if self.subviews.contains($1) == false && self != $1 {
-				self.addSubview($1)
-			}
-		})
-		addConstraints(
-			NSLayoutConstraint.constraints(withVisualFormat: "\(direction.rawValue)\(constraints.constraintString)",
-			options: constraints.options,
-			metrics: constraints.metricDict,
-			views: constraints.viewDict))
+	public func addConstraints(
+		_ constraints: DHConstraintBuilder,
+		setAllViewsTranslatesAutoresizingMaskIntoConstraintsToFalse: Bool = true)
+		->
+		(_ direction: DHConstraintDirection) -> ()
+	{
+		return { (direction: DHConstraintDirection) -> () in
+			constraints.viewDict.forEach({
+				if setAllViewsTranslatesAutoresizingMaskIntoConstraintsToFalse {
+					$1.translatesAutoresizingMaskIntoConstraints = false
+				}
+				
+				if self.subviews.contains($1) == false && self != $1 {
+					self.addSubview($1)
+				}
+			})
+			self.addConstraints(
+				NSLayoutConstraint.constraints(withVisualFormat: "\(direction.rawValue)\(constraints.constraintString)",
+					options: constraints.options,
+					metrics: constraints.metricDict,
+					views: constraints.viewDict))
+		}
 	}
 }
 
