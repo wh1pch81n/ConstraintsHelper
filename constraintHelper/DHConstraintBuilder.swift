@@ -128,6 +128,21 @@ extension Int: DHConstraintBuildable, DHConstraintScalar {}
 extension Float: DHConstraintBuildable, DHConstraintScalar {}
 extension Double: DHConstraintBuildable, DHConstraintScalar {}
 
+extension DHConstraintBuildable where Self: UIView {
+	
+	public func gapLengthEqual() -> DHConstraintBuilder {
+		return DHConstraintBuilder(self, .equal)
+	}
+	
+	public func gapLengthEqual(to: DHConstraintScalar) -> DHConstraintBuilder {
+		return DHConstraintBuilder(self, .equal1(to: to))
+	}
+	
+	public func gapLengthEqual(to: DHConstraintScalar, priority: Int) -> DHConstraintBuilder {
+		return DHConstraintBuilder(self, .equal2(to: to, priority: priority))
+	}
+}
+
 public struct DHConstraintBuilder: StringInterpolationConvertible {
 	/// The Generated Constraint String
 	let constraintString: String
