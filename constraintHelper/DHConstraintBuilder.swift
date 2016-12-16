@@ -165,7 +165,7 @@ extension DHConstraintBuildable where Self: UIView {
 	}
 	
 	public func lengthLessThanOrEqual(to view: UIView) -> DHConstraintBuilder {
-		return DHConstraintBuilder(self, .greaterThanOrEqual, lengthRelativeToView: view)
+		return DHConstraintBuilder(self, .lessThanOrEqual, lengthRelativeToView: view)
 	}
 
 	// MARK: - Mixed
@@ -174,6 +174,12 @@ extension DHConstraintBuildable where Self: UIView {
 		return DHConstraintBuilder(self
 			, .greaterThanOrEqual2(to: s0, priority: p0)
 			, .lessThanOrEqual2(to: s1, priority: p1))
+	}
+}
+
+extension DHConstraintBuildable where  Self: DHConstraintScalar {
+	public func priority(_ p: Int) -> DHConstraintBuilder {
+		return DHConstraintBuilder(length: self, priority: p)
 	}
 }
 
@@ -232,7 +238,7 @@ public struct DHConstraintBuilder: StringInterpolationConvertible {
 	
 	*/
 	
-	public init(length: DHConstraintScalar, priority: Int = 1000) {
+	fileprivate init(length: DHConstraintScalar, priority: Int = 1000) {
 		let uuid = __.count
 		__.count = __.count &+ 1
 		viewDict = [:]
@@ -248,12 +254,8 @@ public struct DHConstraintBuilder: StringInterpolationConvertible {
 		constraintString = "[view_\(uuid)(\(relation.relation)metric_\(uuid)@\(relation.priority))]"
 	}
 	
-	//public init(_ view: UIView, range r: Range<Int>) {
-	//	self.init(view, .greaterThanOrEqual1(to: NSNumber(r.lowerBound)), .lessThanOrEqual1(to: r.upperBound - 1))
-	//}
-
 	fileprivate init(_ view: UIView, _ relations: DHConstraintRelation...) {
-		assert(relations.count > 0, "Needs at least one")
+		//assert(relations.count > 0, "Needs at least one")
 		let uuid = __.count
 		viewDict = ["view_\(uuid)" : view]
 		
@@ -405,58 +407,58 @@ extension UIView {
 	}
 }
 
-@objc
-class DHConstraintBuilderObjc: NSObject {
-	var constraintBuilder: DHConstraintBuilder!
-
-	class func parentView(to view: UIView) -> DHConstraintBuilderObjc {
-		return _parentView(to: view)
-	}
-	class func parentView(to view: UIView, with gapLength: Int) -> DHConstraintBuilderObjc {
-		return _parentView(to: view, with: gapLength)
-	}
-	class func parentView(to view: UIView, with gapLength: Int, with priority: Int) -> DHConstraintBuilderObjc {
-		return _parentView(to: view, with: gapLength, with: priority)
-	}
-	private class func _parentView(to view: UIView, with gapLength: Int? = nil, with priority: Int? = nil) -> DHConstraintBuilderObjc {
-		let v = DHConstraintBuilderObjc()
-		switch (gapLength, priority) {
-		case let (l?, p?):
-			v.constraintBuilder = () |-^ DHConstraintBuilder(length: l, priority: p) ^-^ view
-		case let (l?, .none):
-			v.constraintBuilder = () |-^ DHConstraintBuilder(length: l) ^-^ view
-		case (.none, .some),
-		     (.none, .none):
-			v.constraintBuilder = () |-^ view
-		}
-		return v
-	}
-	
-	//class func view(_ view: UIView, with gapLength: Int? = nil, with priority: Int? = nil, to )
-	
-	func to(view: UIView, with gapLength: Int? = nil, with priority: Int? = nil) -> DHConstraintBuilderObjc {
-		switch (gapLength, priority) {
-		case let (l?, p?):
-			constraintBuilder = constraintBuilder! ^-^ DHConstraintBuilder(length: l, priority: p) ^-^ view
-		case let (l?, .none):
-			constraintBuilder = constraintBuilder! ^-^ DHConstraintBuilder(length: l) ^-^ view
-		case (.none, .some),
-		     (.none, .none):
-			constraintBuilder = constraintBuilder! ^-^ view
-		}
-		return self
-	}
-	
-	func parentViewFrom(view: UIView, with gapLength: Int? = nil, with priority: Int? = nil) -> DHConstraintBuilderObjc {
-		switch (gapLength, priority) {
-		case let (l?, p?):
-			constraintBuilder = view ^-^ DHConstraintBuilder(length: l, priority: p) ^-| ()
-		case let (l?, .none):
-			constraintBuilder = view ^-^ DHConstraintBuilder(length: l) ^-| ()
-		case (.none, .some),
-		     (.none, .none):
-			constraintBuilder = view ^-| ()
-		}
-		return self
-	}
-}
+//@objc
+//class DHConstraintBuilderObjc: NSObject {
+//	var constraintBuilder: DHConstraintBuilder!
+//
+//	class func parentView(to view: UIView) -> DHConstraintBuilderObjc {
+//		return _parentView(to: view)
+//	}
+//	class func parentView(to view: UIView, with gapLength: Int) -> DHConstraintBuilderObjc {
+//		return _parentView(to: view, with: gapLength)
+//	}
+//	class func parentView(to view: UIView, with gapLength: Int, with priority: Int) -> DHConstraintBuilderObjc {
+//		return _parentView(to: view, with: gapLength, with: priority)
+//	}
+//	private class func _parentView(to view: UIView, with gapLength: Int? = nil, with priority: Int? = nil) -> DHConstraintBuilderObjc {
+//		let v = DHConstraintBuilderObjc()
+//		switch (gapLength, priority) {
+//		case let (l?, p?):
+//			v.constraintBuilder = () |-^ DHConstraintBuilder(length: l, priority: p) ^-^ view
+//		case let (l?, .none):
+//			v.constraintBuilder = () |-^ DHConstraintBuilder(length: l) ^-^ view
+//		case (.none, .some),
+//		     (.none, .none):
+//			v.constraintBuilder = () |-^ view
+//		}
+//		return v
+//	}
+//	
+//	//class func view(_ view: UIView, with gapLength: Int? = nil, with priority: Int? = nil, to )
+//	
+//	func to(view: UIView, with gapLength: Int? = nil, with priority: Int? = nil) -> DHConstraintBuilderObjc {
+//		switch (gapLength, priority) {
+//		case let (l?, p?):
+//			constraintBuilder = constraintBuilder! ^-^ DHConstraintBuilder(length: l, priority: p) ^-^ view
+//		case let (l?, .none):
+//			constraintBuilder = constraintBuilder! ^-^ DHConstraintBuilder(length: l) ^-^ view
+//		case (.none, .some),
+//		     (.none, .none):
+//			constraintBuilder = constraintBuilder! ^-^ view
+//		}
+//		return self
+//	}
+//	
+//	func parentViewFrom(view: UIView, with gapLength: Int? = nil, with priority: Int? = nil) -> DHConstraintBuilderObjc {
+//		switch (gapLength, priority) {
+//		case let (l?, p?):
+//			constraintBuilder = view ^-^ DHConstraintBuilder(length: l, priority: p) ^-| ()
+//		case let (l?, .none):
+//			constraintBuilder = view ^-^ DHConstraintBuilder(length: l) ^-| ()
+//		case (.none, .some),
+//		     (.none, .none):
+//			constraintBuilder = view ^-| ()
+//		}
+//		return self
+//	}
+//}

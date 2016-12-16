@@ -151,11 +151,11 @@
 				TargetAttributes = {
 					2F5FB23C1CC449080045E6DA = {
 						CreatedOnToolsVersion = 7.3;
-						LastSwiftMigration = 0800;
+						LastSwiftMigration = 0820;
 					};
 					2F5FB2451CC449080045E6DA = {
 						CreatedOnToolsVersion = 7.3;
-						TestTargetID = 2FC4ACA81CC336EF00B35050;
+						LastSwiftMigration = 0820;
 					};
 				};
 			};
@@ -276,7 +276,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.dnthome.DHConstraintBuilderTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/constraintHelper.app/constraintHelper";
+				SWIFT_VERSION = 3.0;
 			};
 			name = Debug;
 		};
@@ -287,7 +287,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.dnthome.DHConstraintBuilderTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/constraintHelper.app/constraintHelper";
+				SWIFT_VERSION = 3.0;
 			};
 			name = Release;
 		};
@@ -456,7 +456,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.dnthome.DHConstraintBuilderTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/constraintHelper.app/constraintHelper";
+				SWIFT_VERSION = 3.0;
 			};
 			name = Enterprise;
 		};
