@@ -129,17 +129,51 @@ extension Float: DHConstraintBuildable, DHConstraintScalar {}
 extension Double: DHConstraintBuildable, DHConstraintScalar {}
 
 extension DHConstraintBuildable where Self: UIView {
-	
-	public func gapLengthEqual() -> DHConstraintBuilder {
-		return DHConstraintBuilder(self, .equal)
-	}
-	
-	public func gapLengthEqual(to: DHConstraintScalar) -> DHConstraintBuilder {
+	// MARK: - Equal
+	public func lengthEqual(to: DHConstraintScalar) -> DHConstraintBuilder {
 		return DHConstraintBuilder(self, .equal1(to: to))
 	}
 	
-	public func gapLengthEqual(to: DHConstraintScalar, priority: Int) -> DHConstraintBuilder {
+	public func lengthEqual(to: DHConstraintScalar, priority: Int) -> DHConstraintBuilder {
 		return DHConstraintBuilder(self, .equal2(to: to, priority: priority))
+	}
+	
+	public func lengthEqual(to view: UIView) -> DHConstraintBuilder {
+		return DHConstraintBuilder(self, lengthRelativeToView: view)
+	}
+	
+	// MARK: - Greater than
+	public func lengthGreaterThanOrEqual(to: DHConstraintScalar) -> DHConstraintBuilder {
+		return DHConstraintBuilder(self, .greaterThanOrEqual1(to: to))
+	}
+	
+	public func lengthGreaterThanOrEqual(to: DHConstraintScalar, priority: Int) -> DHConstraintBuilder {
+		return DHConstraintBuilder(self, .greaterThanOrEqual2(to: to, priority: priority))
+	}
+	
+	public func lengthGreaterThanOrEqual(to view: UIView) -> DHConstraintBuilder {
+		return DHConstraintBuilder(self, .greaterThanOrEqual, lengthRelativeToView: view)
+	}
+	
+	// MARK: - Less than
+	public func lengthLessThanOrEqual(to: DHConstraintScalar) -> DHConstraintBuilder {
+		return DHConstraintBuilder(self, .lessThanOrEqual1(to: to))
+	}
+	
+	public func lengthLessThanOrEqual(to: DHConstraintScalar, priority: Int) -> DHConstraintBuilder {
+		return DHConstraintBuilder(self, .lessThanOrEqual2(to: to, priority: priority))
+	}
+	
+	public func lengthLessThanOrEqual(to view: UIView) -> DHConstraintBuilder {
+		return DHConstraintBuilder(self, .greaterThanOrEqual, lengthRelativeToView: view)
+	}
+
+	// MARK: - Mixed
+	public func lengthGreaterThanOrEqual(to s0: DHConstraintScalar, priority p0: Int = 1000
+		, andLessThanOrEqualTo s1: DHConstraintScalar, priority p1: Int = 1000) -> DHConstraintBuilder {
+		return DHConstraintBuilder(self
+			, .greaterThanOrEqual2(to: s0, priority: p0)
+			, .lessThanOrEqual2(to: s1, priority: p1))
 	}
 }
 
@@ -206,7 +240,7 @@ public struct DHConstraintBuilder: StringInterpolationConvertible {
 		constraintString = "metric_\(uuid)@\(priority)"
 	}
 	
-	public init(_ view: UIView, _ relation: DHConstraintRelation) {
+	fileprivate init(_ view: UIView, _ relation: DHConstraintRelation) {
 		let uuid = __.count
 		__.count = __.count &+ 1
 		viewDict = ["view_\(uuid)" : view]
@@ -218,7 +252,7 @@ public struct DHConstraintBuilder: StringInterpolationConvertible {
 	//	self.init(view, .greaterThanOrEqual1(to: NSNumber(r.lowerBound)), .lessThanOrEqual1(to: r.upperBound - 1))
 	//}
 
-	public init(_ view: UIView, _ relations: DHConstraintRelation...) {
+	fileprivate init(_ view: UIView, _ relations: DHConstraintRelation...) {
 		assert(relations.count > 0, "Needs at least one")
 		let uuid = __.count
 		viewDict = ["view_\(uuid)" : view]
@@ -240,7 +274,7 @@ public struct DHConstraintBuilder: StringInterpolationConvertible {
 		constraintString = "[view_\(uuid)(\(metricString))]"
 	}
 	
-	public init(_ view: UIView, _ relation: DHConstraintRelation = .equal, lengthRelativeToView: UIView) {
+	fileprivate init(_ view: UIView, _ relation: DHConstraintRelation = .equal, lengthRelativeToView: UIView) {
 		let uuid = __.count
 		__.count = __.count &+ 1
 		let uuid2 = __.count
@@ -255,7 +289,7 @@ public struct DHConstraintBuilder: StringInterpolationConvertible {
 	
 }
 
-public enum DHConstraintRelation {
+private enum DHConstraintRelation {
 	case greaterThanOrEqual
 	case greaterThanOrEqual1(to: DHConstraintScalar)
 	case greaterThanOrEqual2(to: DHConstraintScalar, priority: Int)
@@ -321,6 +355,24 @@ public enum DHConstraintDirection: String {
 
 extension UIView {
 	
+	public struct ConstraintDirection {
+		private let _direction: (DHConstraintDirection) -> ()
+		
+		public var H: Void {
+			direction(.H)
+		}
+		public var V: Void {
+			direction(.V)
+		}
+		
+		init(directionBlock: @escaping (DHConstraintDirection) -> ()) {
+			_direction = directionBlock
+		}
+		private func direction(_ direction: DHConstraintDirection) {
+			_direction(direction)
+		}
+	}
+	
 	/**
 	A helper method that adds constraints.  Automatically sets __translatesAutoresizingMaskIntoConstraints__ to __false__ and adds any views specified in the DHConstraintBuilder if needed.
 	
@@ -332,9 +384,9 @@ extension UIView {
 		_ constraints: DHConstraintBuilder,
 		setAllViewsTranslatesAutoresizingMaskIntoConstraintsToFalse: Bool = true)
 		->
-		(_ direction: DHConstraintDirection) -> ()
+		ConstraintDirection
 	{
-		return { (direction: DHConstraintDirection) -> () in
+		return ConstraintDirection(directionBlock: { (direction: DHConstraintDirection) -> () in
 			constraints.viewDict.forEach({
 				if setAllViewsTranslatesAutoresizingMaskIntoConstraintsToFalse {
 					$1.translatesAutoresizingMaskIntoConstraints = false
@@ -349,7 +401,7 @@ extension UIView {
 					options: constraints.options,
 					metrics: constraints.metricDict,
 					views: constraints.viewDict))
-		}
+		})
 	}
 }
 
