@@ -388,6 +388,8 @@ extension UIView {
 		->
 		ConstraintDirection
 	{
+		print(ProcessInfo.processInfo.environment["dnthome.testEnv"] ?? "")
+
 		return ConstraintDirection(directionBlock: { (direction: DHConstraintDirection) -> () in
 			constraints.viewDict.forEach({
 				if setAllViewsTranslatesAutoresizingMaskIntoConstraintsToFalse {
