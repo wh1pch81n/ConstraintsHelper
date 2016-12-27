@@ -11,6 +11,7 @@
 		2F5FB2471CC449080045E6DA /* DHConstraintBuilder.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2F5FB23D1CC449080045E6DA /* DHConstraintBuilder.framework */; };
 		2F5FB24E1CC449080045E6DA /* DHConstraintBuilderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F5FB24D1CC449080045E6DA /* DHConstraintBuilderTests.swift */; };
 		2F5FB25D1CC44B3A0045E6DA /* DHConstraintBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FC4ACCC1CC3370700B35050 /* DHConstraintBuilder.swift */; };
+		7F528A951E12F7B60013D64D /* DHConstraintBuilderObjcTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F528A941E12F7B60013D64D /* DHConstraintBuilderObjcTests.swift */; };
 		7FAA523F1E11AFA900BA4156 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FAA523E1E11AFA900BA4156 /* AppDelegate.swift */; };
 		7FAA52411E11AFA900BA4156 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FAA52401E11AFA900BA4156 /* ViewController.swift */; };
 		7FAA52441E11AFA900BA4156 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7FAA52421E11AFA900BA4156 /* Main.storyboard */; };
@@ -67,6 +68,7 @@
 		2F5FB24D1CC449080045E6DA /* DHConstraintBuilderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DHConstraintBuilderTests.swift; sourceTree = "<group>"; };
 		2F5FB24F1CC449080045E6DA /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		2FC4ACCC1CC3370700B35050 /* DHConstraintBuilder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = DHConstraintBuilder.swift; path = ../constraintHelper/DHConstraintBuilder.swift; sourceTree = "<group>"; };
+		7F528A941E12F7B60013D64D /* DHConstraintBuilderObjcTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DHConstraintBuilderObjcTests.swift; sourceTree = "<group>"; };
 		7FAA523C1E11AFA900BA4156 /* SampleProj_DHConstraintBuilder.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SampleProj_DHConstraintBuilder.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		7FAA523E1E11AFA900BA4156 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		7FAA52401E11AFA900BA4156 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -127,6 +129,7 @@
 			isa = PBXGroup;
 			children = (
 				2F5FB24D1CC449080045E6DA /* DHConstraintBuilderTests.swift */,
+				7F528A941E12F7B60013D64D /* DHConstraintBuilderObjcTests.swift */,
 				2F5FB24F1CC449080045E6DA /* Info.plist */,
 			);
 			path = DHConstraintBuilderTests;
@@ -360,6 +363,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7F528A951E12F7B60013D64D /* DHConstraintBuilderObjcTests.swift in Sources */,
 				2F5FB24E1CC449080045E6DA /* DHConstraintBuilderTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -681,6 +685,7 @@
 				7FAA52581E11AFA900BA4156 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		7FAA525D1E11AFA900BA4156 /* Build configuration list for PBXNativeTarget "SampleProj_DHConstraintBuilderTests" */ = {
 			isa = XCConfigurationList;
@@ -689,6 +694,7 @@
 				7FAA525B1E11AFA900BA4156 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

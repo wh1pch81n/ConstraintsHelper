@@ -422,3 +422,52 @@ extension UIView {
 	}
 }
 
+/**
+Objective-c compatable wrapper
+*/
+
+public class DHConstraintBuilderObjc: NSObject {
+	
+	private(set) var _constraintBuilder: DHConstraintBuilder
+	
+	// MARK: - Wrapping a view in a DHConstraintBuilderObjc object
+	public init(view: UIView) {
+		_constraintBuilder = "\(view)"
+		super.init()
+	}
+	
+	public init(view: UIView, ofLength length: Float) {
+		_constraintBuilder = view.lengthEqual(to: length)
+		super.init()
+	}
+	
+	// MARK: - Wrapping a scalar in a DHConstraintBuilderObjc object
+	public init(length: Float) {
+		_constraintBuilder = "\(length)"
+		super.init()
+	}
+	
+	public init(length: Float, withPriority priority: Int) {
+		_constraintBuilder = length.priority(priority)
+		super.init()
+	}
+	
+	// MARK: - Build methods
+	
+	public func appendConstraintBuilder(_ builder: DHConstraintBuilderObjc) -> Self {
+		_constraintBuilder = _constraintBuilder ^-^ builder._constraintBuilder
+		return self
+	}
+	
+	public class func prefixSuperViewToConstraintBuilder(_ builder: DHConstraintBuilderObjc) -> DHConstraintBuilderObjc {
+		let c = DHConstraintBuilderObjc(length: 0)
+		c._constraintBuilder = () |-^ builder._constraintBuilder
+		return c
+	}
+	
+	public class func postfixSuperViewToConstraintBuilder(_ builder: DHConstraintBuilderObjc) -> DHConstraintBuilderObjc {
+		let c = DHConstraintBuilderObjc(length: 0)
+		c._constraintBuilder = builder._constraintBuilder ^-| ()
+		return c
+	}
+}
