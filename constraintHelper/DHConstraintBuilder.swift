@@ -398,11 +398,27 @@ extension UIView {
 					self.addSubview($1)
 				}
 			})
-			self.addConstraints(
-				NSLayoutConstraint.constraints(withVisualFormat: "\(direction.rawValue)\(constraints.constraintString)",
-					options: constraints.options,
-					metrics: constraints.metricDict,
-					views: constraints.viewDict))
+			self.addConstraints(self.produce(direction, layoutConstraintsFrom: constraints))
 		})
 	}
+	
+	private func produce(_ direction: DHConstraintDirection, layoutConstraintsFrom builder: DHConstraintBuilder) -> [NSLayoutConstraint]
+	{
+		let constraints = builder
+		return NSLayoutConstraint.constraints(withVisualFormat: direction.rawValue + constraints.constraintString,
+		                                      options: constraints.options,
+		                                      metrics: constraints.metricDict,
+		                                      views: constraints.viewDict)
+	}
+	
+	public func produceHorizontalLayoutConstraints(from builder: DHConstraintBuilder) -> [NSLayoutConstraint]
+	{
+		return produce(DHConstraintDirection.Horizontal, layoutConstraintsFrom: builder)
+	}
+	
+	public func produceVerticalLayoutConstraints(from builder: DHConstraintBuilder) -> [NSLayoutConstraint]
+	{
+		return produce(DHConstraintDirection.Vertical, layoutConstraintsFrom: builder)
+	}
 }
+
