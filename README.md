@@ -1,4 +1,5 @@
 # DHConstraintBuilder 
+[iOS Compatibility](https://img.shields.io/badge/iOS%20-8%2B-green.svg)
 [![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage)
 
 ## Installation 
