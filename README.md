@@ -2,6 +2,8 @@
 ![iOS Compatibility](https://img.shields.io/badge/iOS%20-8%2B-green.svg)
 [![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage)
 
+DHConstraintBuilder is a light-weight layout framework which wraps AutoLayout with a nicer, semi-WYSIWYG syntax.  This API provides a chainable way of describing your NSLayoutConstraints which results in layout code that is more concise and readable.
+
 ## Installation 
 
 ### Carthage
@@ -9,13 +11,15 @@
 github "wh1pch81n/DHConstraintBuilder" "1.0.0"
 ```
 
-# What does DHConstraintBuilder look like in action?
+# What is wrong with NSLayoutConstraints?
 
-You can make constraints like this one:
+Auto-Layout is a powerful and flexible way of organizaing and laying out your views.  However, it is much to verbose.  While the Visual Formatting API helps, it isn't always the best.  Thanks to swift we can reduce boiler-plate code and only write what is necessary.
 
-![alt text](https://github.com/wh1pch81n/BoxyBoxy/blob/master/ViewExample.png)
-<script src="https://gist.github.com/nisrulz/11c0d63428b108f10c83.js"></script>
-Using code like this:
+Suppose you have your views set up like the picture below. (I have annotated the image with magenta icons to visually show where we need to add constraints.)
+
+![alt text](https://github.com/wh1pch81n/DHConstraintBuilder/blob/master/ViewExample.png)
+
+DHConstraintBuilder can express the layout like this:
 ```swift
 view_cb.addConstraints(() |-^ greenView_cb ^-^ 15.5 ^-^ redView_cb ^-| ()).H
 view_cb.addConstraints(() |-^ blueView_cb ^-| ()).H
@@ -58,3 +62,5 @@ view_vf.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:|-[re
 greenView_vf.widthAnchor.constraint(equalTo: redView_vf.widthAnchor).isActive = true	
 greenView_vf.heightAnchor.constraint(equalTo: blueView_vf.heightAnchor).isActive = true
 ```
+
+Notice how NSLayoutConstraint is very long.  DHConstraintBuilder automatically sets translatesAutoresizingMaskIntoConstraints to NO and automatically adds the view to its parent view.
