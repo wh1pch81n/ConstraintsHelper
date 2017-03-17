@@ -126,6 +126,7 @@ extension DHConstraintBuilder: DHConstraintBuildable {}
 extension UIView: DHConstraintBuildable {}
 extension Int: DHConstraintBuildable, DHConstraintScalar {}
 extension Float: DHConstraintBuildable, DHConstraintScalar {}
+extension CGFloat: DHConstraintBuildable, DHConstraintScalar {}
 extension Double: DHConstraintBuildable, DHConstraintScalar {}
 
 extension DHConstraintBuildable where Self: UIView {
@@ -221,6 +222,11 @@ public struct DHConstraintBuilder: StringInterpolationConvertible {
 			viewDict = [:]
 			metricDict = [:]
 			constraintString = "\(s)"
+		} else if let n = expr as? DHConstraintScalar {
+			let _c: DHConstraintBuilder = DHConstraintBuilder(length: n)
+			viewDict = _c.viewDict
+			metricDict = _c.metricDict
+			constraintString = _c.constraintString
 		} else {
 			viewDict = [:]
 			metricDict = [:]
