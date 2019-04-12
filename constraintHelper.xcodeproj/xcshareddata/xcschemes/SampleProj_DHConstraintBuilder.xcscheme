@@ -14,9 +14,9 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "2F5FB23C1CC449080045E6DA"
-               BuildableName = "DHConstraintBuilder.framework"
-               BlueprintName = "DHConstraintBuilder"
+               BlueprintIdentifier = "7FAA523B1E11AFA900BA4156"
+               BuildableName = "SampleProj_DHConstraintBuilder.app"
+               BlueprintName = "SampleProj_DHConstraintBuilder"
                ReferencedContainer = "container:constraintHelper.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -28,7 +28,26 @@
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
       shouldUseLaunchSchemeArgsEnv = "YES">
       <Testables>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "7FAA524E1E11AFA900BA4156"
+               BuildableName = "SampleProj_DHConstraintBuilderTests.xctest"
+               BlueprintName = "SampleProj_DHConstraintBuilderTests"
+               ReferencedContainer = "container:constraintHelper.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
       </Testables>
+      <MacroExpansion>
+         <BuildableReference
+            BuildableIdentifier = "primary"
+            BlueprintIdentifier = "7FAA523B1E11AFA900BA4156"
+            BuildableName = "SampleProj_DHConstraintBuilder.app"
+            BlueprintName = "SampleProj_DHConstraintBuilder"
+            ReferencedContainer = "container:constraintHelper.xcodeproj">
+         </BuildableReference>
+      </MacroExpansion>
       <AdditionalOptions>
       </AdditionalOptions>
    </TestAction>
@@ -42,15 +61,16 @@
       debugDocumentVersioning = "YES"
       debugServiceExtension = "internal"
       allowLocationSimulation = "YES">
-      <MacroExpansion>
+      <BuildableProductRunnable
+         runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "2F5FB23C1CC449080045E6DA"
-            BuildableName = "DHConstraintBuilder.framework"
-            BlueprintName = "DHConstraintBuilder"
+            BlueprintIdentifier = "7FAA523B1E11AFA900BA4156"
+            BuildableName = "SampleProj_DHConstraintBuilder.app"
+            BlueprintName = "SampleProj_DHConstraintBuilder"
             ReferencedContainer = "container:constraintHelper.xcodeproj">
          </BuildableReference>
-      </MacroExpansion>
+      </BuildableProductRunnable>
       <AdditionalOptions>
       </AdditionalOptions>
    </LaunchAction>
@@ -60,15 +80,16 @@
       savedToolIdentifier = ""
       useCustomWorkingDirectory = "NO"
       debugDocumentVersioning = "YES">
-      <MacroExpansion>
+      <BuildableProductRunnable
+         runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "2F5FB23C1CC449080045E6DA"
-            BuildableName = "DHConstraintBuilder.framework"
-            BlueprintName = "DHConstraintBuilder"
+            BlueprintIdentifier = "7FAA523B1E11AFA900BA4156"
+            BuildableName = "SampleProj_DHConstraintBuilder.app"
+            BlueprintName = "SampleProj_DHConstraintBuilder"
             ReferencedContainer = "container:constraintHelper.xcodeproj">
          </BuildableReference>
-      </MacroExpansion>
+      </BuildableProductRunnable>
    </ProfileAction>
    <AnalyzeAction
       buildConfiguration = "Debug">

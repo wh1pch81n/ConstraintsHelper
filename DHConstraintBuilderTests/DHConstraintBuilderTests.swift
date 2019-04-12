@@ -40,16 +40,16 @@ class DHConstraintBuilderTests: XCTestCase {
 	func testSuperViewWithIntegerConstraint() {
 		let sut = () |-^ 5
 		
-		XCTAssertEqual(sut.constraintString , "|-5")
-		XCTAssertEqual(sut.metricDict.count, 0)
+		XCTAssertEqual(sut.constraintString , "|-metric_0@1000")
+		XCTAssertEqual(sut.metricDict.count, 1)
 		XCTAssertEqual(sut.viewDict.count, 0)
 	}
 	
 	func testSuperViewWithFloatingPointConstraint() {
 		let sut = () |-^ 5.5
 		
-		XCTAssertEqual(sut.constraintString , "|-5.5")
-		XCTAssertEqual(sut.metricDict.count, 0)
+		XCTAssertEqual(sut.constraintString , "|-metric_0@1000")
+		XCTAssertEqual(sut.metricDict.count, 1)
 		XCTAssertEqual(sut.viewDict.count, 0)
 	}
 	
@@ -126,8 +126,8 @@ class DHConstraintBuilderTests: XCTestCase {
 		let L = 5
 		let sut = L ^-| ()
 		
-		XCTAssertEqual(sut.constraintString , "\(L)-|")
-		XCTAssertEqual(sut.metricDict as! [String:Int], [:])
+		XCTAssertEqual(sut.constraintString , "metric_0@1000-|")
+		XCTAssertEqual(sut.metricDict as! [String:Int], ["metric_0": L])
 		XCTAssertEqual(sut.viewDict, [:])
 	}
 	
@@ -135,8 +135,8 @@ class DHConstraintBuilderTests: XCTestCase {
 		let L = 5.5
 		let sut = L ^-| ()
 		
-		XCTAssertEqual(sut.constraintString , "\(L)-|")
-		XCTAssertEqual(sut.metricDict as! [String:Int], [:])
+		XCTAssertEqual(sut.constraintString , "metric_0@1000-|")
+		XCTAssertEqual(sut.metricDict["metric_0"] as! Double, L)
 		XCTAssertEqual(sut.viewDict, [:])
 	}
 	
@@ -214,8 +214,8 @@ class DHConstraintBuilderTests: XCTestCase {
 		let v = UIView()
 		let sut = v ^-^ L
 		
-		XCTAssertEqual(sut.constraintString , "[view_0]-\(L)")
-		XCTAssertEqual(sut.metricDict as! [String:Int], [:])
+		XCTAssertEqual(sut.constraintString , "[view_0]-metric_1@1000")
+		XCTAssertEqual(sut.metricDict as! [String:Int], ["metric_1": L])
 		XCTAssertEqual(sut.viewDict, ["view_0":v])
 	}
 	
@@ -224,8 +224,8 @@ class DHConstraintBuilderTests: XCTestCase {
 		let v = UIView()
 		let sut = v ^-^ L
 		
-		XCTAssertEqual(sut.constraintString , "[view_0]-\(5.5)")
-		XCTAssertEqual(sut.metricDict as! [String:Int], [:])
+		XCTAssertEqual(sut.constraintString , "[view_0]-metric_1@1000")
+		XCTAssertEqual(sut.metricDict["metric_1"] as! Double, 5.5)
 		XCTAssertEqual(sut.viewDict, ["view_0":v])
 	}
 	
@@ -246,8 +246,9 @@ class DHConstraintBuilderTests: XCTestCase {
 		let F = 9.9
 		let sut = v0.lengthEqual(to: L) ^-^ F
 		
-		XCTAssertEqual(sut.constraintString , "[view_0(==metric_0@1000)]-\(F)")
-		XCTAssertEqual(sut.metricDict as! [String:Int], ["metric_0":L])
+		XCTAssertEqual(sut.constraintString , "[view_0(==metric_0@1000)]-metric_1@1000")
+        XCTAssertEqual(sut.metricDict["metric_0"] as! Int, L)
+        XCTAssertEqual(sut.metricDict["metric_1"] as! Double, F)
 		XCTAssertEqual(sut.viewDict, ["view_0":v0])
 	}
 
@@ -257,8 +258,8 @@ class DHConstraintBuilderTests: XCTestCase {
 		let F = 9
 		let sut = v0.lengthEqual(to: L) ^-^ F
 		
-		XCTAssertEqual(sut.constraintString , "[view_0(==metric_0@1000)]-\(F)")
-		XCTAssertEqual(sut.metricDict as! [String:Int], ["metric_0":L])
+		XCTAssertEqual(sut.constraintString , "[view_0(==metric_0@1000)]-metric_1@1000")
+        XCTAssertEqual(sut.metricDict as! [String:Int], ["metric_0":L, "metric_1": F])
 		XCTAssertEqual(sut.viewDict, ["view_0":v0])
 	}
 
@@ -304,8 +305,8 @@ class DHConstraintBuilderTests: XCTestCase {
 		let relation = ">="
 		let sut = v0 ^>=^ L0
 		
-		XCTAssertEqual(sut.constraintString, "[view_0]-\(relation)\(L0)")
-		XCTAssertEqual(sut.metricDict as! [String:Int], [:])
+		XCTAssertEqual(sut.constraintString, "[view_0]-\(relation)metric_1@1000")
+		XCTAssertEqual(sut.metricDict["metric_1"] as! Int, L0)
 		XCTAssertEqual(sut.viewDict, ["view_0":v0])
 	}
 
@@ -315,8 +316,8 @@ class DHConstraintBuilderTests: XCTestCase {
 		let relation = ">="
 		let sut = v0 ^>=^ L0
 		
-		XCTAssertEqual(sut.constraintString, "[view_0]-\(relation)\(L0)")
-		XCTAssertEqual(sut.metricDict as! [String:Int], [:])
+		XCTAssertEqual(sut.constraintString, "[view_0]-\(relation)metric_1@1000")
+		XCTAssertEqual(sut.metricDict["metric_1"] as! Double, L0)
 		XCTAssertEqual(sut.viewDict, ["view_0":v0])
 	}
 	
@@ -350,8 +351,8 @@ class DHConstraintBuilderTests: XCTestCase {
 		let relation = "<="
 		let sut = v0 ^<=^ L0
 		
-		XCTAssertEqual(sut.constraintString, "[view_0]-\(relation)\(L0)")
-		XCTAssertEqual(sut.metricDict as! [String:Int], [:])
+		XCTAssertEqual(sut.constraintString, "[view_0]-\(relation)metric_1@1000")
+		XCTAssertEqual(sut.metricDict as! [String:Int], ["metric_1": L0])
 		XCTAssertEqual(sut.viewDict, ["view_0":v0])
 	}
 	
@@ -361,8 +362,8 @@ class DHConstraintBuilderTests: XCTestCase {
 		let relation = "<="
 		let sut = v0 ^<=^ L0
 		
-		XCTAssertEqual(sut.constraintString, "[view_0]-\(relation)\(L0)")
-		XCTAssertEqual(sut.metricDict as! [String:Int], [:])
+		XCTAssertEqual(sut.constraintString, "[view_0]-\(relation)metric_1@1000")
+		XCTAssertEqual(sut.metricDict["metric_1"] as! Double, L0)
 		XCTAssertEqual(sut.viewDict, ["view_0":v0])
 	}
 	

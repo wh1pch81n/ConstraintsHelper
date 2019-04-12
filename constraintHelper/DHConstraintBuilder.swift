@@ -189,7 +189,7 @@ public struct DHConstraintBuilder: StringInterpolationConvertible {
 	let constraintString: String
 	
 	/// Align all views according to NSLayoutFormatOptions
-	public var options: NSLayoutFormatOptions = NSLayoutFormatOptions(rawValue: 0)
+	public var options: NSLayoutConstraint.FormatOptions = NSLayoutConstraint.FormatOptions(rawValue: 0)
 	/// Holds accumulated metric data
 	let metricDict: [String : DHConstraintScalar]
 	/// Holds accumulated view data

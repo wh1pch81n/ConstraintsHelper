@@ -37,8 +37,8 @@ class DHConstraintBuilderObjcTests: XCTestCase {
 		let sut = DHConstraintBuilderObjc.prefixSuperViewToConstraintBuilder(DHConstraintBuilderObjc(length: 5.5))
 			._constraintBuilder
 		
-		XCTAssertEqual(sut.constraintString , "|-5.5")
-		XCTAssertEqual(sut.metricDict.count, 0)
+		XCTAssertEqual(sut.constraintString , "|-metric_0@1000")
+		XCTAssertEqual(sut.metricDict.count, 1)
 		XCTAssertEqual(sut.viewDict.count, 0)
 	}
 	

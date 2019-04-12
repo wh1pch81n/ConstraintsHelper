@@ -13,6 +13,7 @@ struct EnvironmentVariables: RawRepresentable {
 	let rawValue: String
 
 	static let dnthome_testing = EnvironmentVariables(rawValue: "dnthome_testing")
+    static let xctestConfigurationFilePath = EnvironmentVariables(rawValue: "XCTestConfigurationFilePath")
 	
 	var enabled: Bool {
 		if let v = ProcessInfo.processInfo.environment[rawValue] {
@@ -34,10 +35,10 @@ class ViewController: UIViewController {
 		super.viewDidAppear(animated)
 
 
-		if EnvironmentVariables.dnthome_testing.enabled == false {
-			let alert = UIAlertController(title: "See Tests for DHConstraintBuilder Usage examples", message: nil, preferredStyle: .alert)
-			self.present(alert, animated: true, completion: nil)
-		}
+        if ProcessInfo.processInfo.environment["XCTestConfigurationFilePath"] == nil {
+            let alert = UIAlertController(title: "See Tests for DHConstraintBuilder Usage examples", message: nil, preferredStyle: .alert)
+            self.present(alert, animated: true, completion: nil)
+        }
 	}
 	
 	override func loadView() {
@@ -64,9 +65,10 @@ class ViewController: UIViewController {
 		// Vertical Constarints
 		view.addConstraints(vfvLabel.lengthEqual(to: 30)).V
 		view.addConstraints(dhLabel.lengthEqual(to: 30)).V
-		view.addConstraints(() |-^ 40 ^-^ vfvLabel ^-^ 0 ^-^ visualFormatView ^-^ dhLabel ^-^ 0 ^-^ dhConstraintView ^-^ 20 ^-| ()).V
+		view.addConstraints(() |-^ vfvLabel ^-^ 0 ^-^ visualFormatView ^-^ dhLabel ^-^ 0 ^-^ dhConstraintView ^-| ()).V
 		
 		view.addConstraints(visualFormatView.lengthEqual(to: dhConstraintView)).V
 	}
+
 }
 
