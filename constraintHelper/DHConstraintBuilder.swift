@@ -61,8 +61,24 @@ let view5 = UIView()
 view3.addConstraints(view4 ^-^ 8 ^-^ view5) // view1 is 8 units away from view2
 ```
 */
-public func ^-^<T: DHConstraintBuildable,U: DHConstraintBuildable>(lhs: T, rhs: U) -> DHConstraintBuilder {
-	return "\(lhs)-\(rhs)"
+public func ^-^(lhs: DHConstraintBuilder, rhs: DHConstraintBuilder) -> DHConstraintBuilder {
+    return "\(lhs)-\(rhs)"
+}
+
+public func ^-^(lhs: DHConstraintBuilder, rhs: UIView) -> DHConstraintBuilder {
+    return "\(lhs)-\(rhs)"
+}
+
+public func ^-^(lhs: DHConstraintBuilder, rhs: DHConstraintScalar) -> DHConstraintBuilder {
+    return "\(lhs)-\(rhs)"
+}
+
+public func ^-^(lhs: UIView, rhs: UIView) -> DHConstraintBuilder {
+    return "\(lhs)-\(rhs)"
+}
+
+public func ^-^(lhs: UIView, rhs: DHConstraintScalar) -> DHConstraintBuilder {
+    return "\(lhs)-\(rhs)"
 }
 
 /**
@@ -74,8 +90,16 @@ let view2 = UIView()
 view1.addConstraints(() |-^ view2)
 ```
 */
-public func |-^<T: DHConstraintBuildable>(lhs: (Void), rhs: T) -> DHConstraintBuilder {
-	return "|-\(rhs)"
+public func |-^(lhs: (Void), rhs: DHConstraintBuilder) -> DHConstraintBuilder {
+    return "|-\(rhs)"
+}
+
+public func |-^(lhs: (Void), rhs: DHConstraintScalar) -> DHConstraintBuilder {
+    return "|-\(rhs)"
+}
+
+public func |-^(lhs: (Void), rhs: UIView) -> DHConstraintBuilder {
+    return "|-\(rhs)"
 }
 
 /**
@@ -87,8 +111,17 @@ let view2 = UIView()
 view1.addConstraints(view2 ^-| ())
 ```
 */
-public func ^-|<T: DHConstraintBuildable>(lhs: T, rhs: (Void)) -> DHConstraintBuilder {
-	return "\(lhs)-|"
+public func ^-|(lhs: DHConstraintBuilder, rhs: (Void)) -> DHConstraintBuilder {
+    return "\(lhs)-|"
+}
+
+public func ^-|(lhs: DHConstraintScalar, rhs: (Void)) -> DHConstraintBuilder {
+    return "\(lhs)-|"
+}
+
+
+public func ^-|(lhs: UIView, rhs: (Void)) -> DHConstraintBuilder {
+    return "\(lhs)-|"
 }
 
 /** 
@@ -101,8 +134,12 @@ let view2 = UIView()
 view0.addConstraints(view1 ^>=^ 8 ^-^ view2) // view1 is >=8 units away from view2
 ```
 */
-public func ^>=^<T: DHConstraintBuildable, U: DHConstraintBuildable>(lhs: T, rhs: U) -> DHConstraintBuilder {
-	return "\(lhs)->=\(rhs)"
+public func ^>=^(lhs: UIView, rhs: DHConstraintScalar) -> DHConstraintBuilder {
+    return "\(lhs)->=\(rhs)"
+}
+
+public func ^>=^(lhs: UIView, rhs: DHConstraintBuilder) -> DHConstraintBuilder {
+    return "\(lhs)->=\(rhs)"
 }
 
 /** 
@@ -115,21 +152,21 @@ let view2 = UIView()
 view0.addConstraints(view1 ^<=^ 8 ^-^ view2) // view1 is <=8 units away from view2
 ```
 */
-public func ^<=^<T: DHConstraintBuildable, U: DHConstraintBuildable>(lhs: T, rhs: U) -> DHConstraintBuilder {
-	return "\(lhs)-<=\(rhs)"
+public func ^<=^(lhs: UIView, rhs: DHConstraintScalar) -> DHConstraintBuilder {
+    return "\(lhs)-<=\(rhs)"
 }
 
-public protocol DHConstraintBuildable {}
+public func ^<=^(lhs: UIView, rhs: DHConstraintBuilder) -> DHConstraintBuilder {
+    return "\(lhs)-<=\(rhs)"
+}
+
 public protocol DHConstraintScalar {}
 
-extension DHConstraintBuilder: DHConstraintBuildable {}
-extension UIView: DHConstraintBuildable {}
-extension Int: DHConstraintBuildable, DHConstraintScalar {}
-extension Float: DHConstraintBuildable, DHConstraintScalar {}
-extension CGFloat: DHConstraintBuildable, DHConstraintScalar {}
-extension Double: DHConstraintBuildable, DHConstraintScalar {}
+extension Int: DHConstraintScalar {}
+extension CGFloat: DHConstraintScalar {}
+extension Double: DHConstraintScalar {}
 
-extension DHConstraintBuildable where Self: UIView {
+extension UIView {
 	// MARK: - Equal
 	public func lengthEqual(to: DHConstraintScalar) -> DHConstraintBuilder {
 		return DHConstraintBuilder(self, .equal1(to: to))
@@ -178,13 +215,55 @@ extension DHConstraintBuildable where Self: UIView {
 	}
 }
 
-extension DHConstraintBuildable where  Self: DHConstraintScalar {
+extension DHConstraintScalar {
 	public func priority(_ p: Int) -> DHConstraintBuilder {
 		return DHConstraintBuilder(length: self, priority: p)
 	}
 }
 
-public struct DHConstraintBuilder: StringInterpolationConvertible {
+public struct DHConstraintBuilder: ExpressibleByStringInterpolation {
+    public struct StringInterpolation: StringInterpolationProtocol {
+        
+        /// Constraint String
+        var constraintString: String = ""
+        /// Holds accumulated metric data
+        var metricDict: [String : DHConstraintScalar] = [:]
+        /// Holds accumulated view data
+        var viewDict: [String : UIView] = [:]
+        var options: NSLayoutConstraint.FormatOptions = NSLayoutConstraint.FormatOptions(rawValue: 0)
+
+        public init(literalCapacity: Int, interpolationCount: Int) {
+            constraintString.reserveCapacity(literalCapacity * 2)
+        }
+
+        public mutating func appendLiteral(_ literal: String) {
+            constraintString += literal
+        }
+        
+        public mutating func appendInterpolation(_ scalar: DHConstraintScalar) {
+            let _c: DHConstraintBuilder = DHConstraintBuilder(length: scalar)
+            viewDict = viewDict + _c.viewDict
+            metricDict = metricDict + _c.metricDict
+            constraintString += _c.constraintString
+        }
+        
+        public mutating func appendInterpolation(_ view: UIView) {
+            let uuid = __.count
+            __.count = __.count &+ 1
+            viewDict = viewDict + ["view_\(uuid)" : view]
+            metricDict = metricDict + [:]
+            constraintString += "[view_\(uuid)]"
+        }
+        
+        public mutating func appendInterpolation(_ builder: DHConstraintBuilder) {
+            constraintString += builder.constraintString
+            options.formUnion(builder.options)
+            metricDict = metricDict + builder.metricDict
+            viewDict = viewDict + builder.viewDict
+        }
+        
+    }
+    
 	/// The Generated Constraint String
 	let constraintString: String
 	
@@ -194,45 +273,21 @@ public struct DHConstraintBuilder: StringInterpolationConvertible {
 	let metricDict: [String : DHConstraintScalar]
 	/// Holds accumulated view data
 	let viewDict: [String : UIView]
-	struct __ {
-		static var count: Int = 0
-	}
-	
-	/// every segment created by init<T>(stringInterpolationSegment expr: T) will come here as an array of Segments.
-	public init(stringInterpolation strings: DHConstraintBuilder...) {
-		constraintString = strings.map({ $0.constraintString }).reduce("", +)
-		viewDict = strings.map({ $0.viewDict }).reduce([:], +)
-		metricDict = strings.map({ $0.metricDict }).reduce([:], +)
-	}
-	
-	/// the string literal is broken up into intervals of all string and \(..) which are called segments
-	public init<T>(stringInterpolationSegment expr: T) {
-		if let ch = expr as? DHConstraintBuilder {
-			constraintString = ch.constraintString
-			options = ch.options
-			metricDict = ch.metricDict
-			viewDict = ch.viewDict
-		} else if let v = expr as? UIView {
-			let uuid = __.count
-			__.count = __.count &+ 1
-			viewDict = ["view_\(uuid)" : v]
-			metricDict = [:]
-			constraintString = "[view_\(uuid)]"
-		} else if let s = expr as? String {
-			viewDict = [:]
-			metricDict = [:]
-			constraintString = "\(s)"
-		} else if let n = expr as? DHConstraintScalar {
-			let _c: DHConstraintBuilder = DHConstraintBuilder(length: n)
-			viewDict = _c.viewDict
-			metricDict = _c.metricDict
-			constraintString = _c.constraintString
-		} else {
-			viewDict = [:]
-			metricDict = [:]
-			constraintString = "\(String(describing: expr))"
-		}
-	}
+    struct __ {
+        static var count: Int = 0
+    }
+
+    public init(stringLiteral value: String) {
+        constraintString = value
+        metricDict = [:]
+        viewDict = [:]
+    }
+    
+    public init(stringInterpolation: StringInterpolation) {
+        constraintString = stringInterpolation.constraintString
+        metricDict = stringInterpolation.metricDict
+        viewDict = stringInterpolation.viewDict
+    }
 	
 	/**
 	Creates a DHConstraintBuilder object 
@@ -438,22 +493,22 @@ public class DHConstraintBuilderObjc: NSObject {
 	
 	// MARK: - Wrapping a view in a DHConstraintBuilderObjc object
 	public init(view: UIView) {
-		_constraintBuilder = "\(view)"
+        _constraintBuilder = "\(view)"
 		super.init()
 	}
 	
-	public init(view: UIView, ofLength length: Float) {
+	public init(view: UIView, ofLength length: CGFloat) {
 		_constraintBuilder = view.lengthEqual(to: length)
 		super.init()
 	}
 	
 	// MARK: - Wrapping a scalar in a DHConstraintBuilderObjc object
-	public init(length: Float) {
-		_constraintBuilder = "\(length)"
+	public init(length: CGFloat) {
+        _constraintBuilder = "\(length)"
 		super.init()
 	}
 	
-	public init(length: Float, withPriority priority: Int) {
+	public init(length: CGFloat, withPriority priority: Int) {
 		_constraintBuilder = length.priority(priority)
 		super.init()
 	}

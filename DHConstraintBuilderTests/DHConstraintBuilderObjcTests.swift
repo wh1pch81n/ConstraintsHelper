@@ -43,13 +43,13 @@ class DHConstraintBuilderObjcTests: XCTestCase {
 	}
 	
 	func testSuperViewWithDHConstraintBuilderViewWithLength() {
-		let L = Float(5.0)
+		let L = CGFloat(5.0)
 		let v = UIView()
 		let sut = DHConstraintBuilderObjc.prefixSuperViewToConstraintBuilder(
 			DHConstraintBuilderObjc(view: v, ofLength: L))._constraintBuilder
 		
 		XCTAssertEqual(sut.constraintString , "|-[view_0(==metric_0@1000)]")
-		XCTAssertEqual(sut.metricDict as! [String:Float], ["metric_0": L])
+		XCTAssertEqual(sut.metricDict as! [String: CGFloat], ["metric_0": L])
 		XCTAssertEqual(sut.viewDict, ["view_0" : v])
 	}
 	
