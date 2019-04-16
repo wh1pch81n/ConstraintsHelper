@@ -73,11 +73,27 @@ public func ^-^(lhs: DHConstraintBuilder, rhs: DHConstraintScalar) -> DHConstrai
     return "\(lhs)-\(rhs)"
 }
 
+public func ^-^(lhs: UIView, rhs: DHConstraintBuilder) -> DHConstraintBuilder {
+    return "\(lhs)-\(rhs)"
+}
+
 public func ^-^(lhs: UIView, rhs: UIView) -> DHConstraintBuilder {
     return "\(lhs)-\(rhs)"
 }
 
 public func ^-^(lhs: UIView, rhs: DHConstraintScalar) -> DHConstraintBuilder {
+    return "\(lhs)-\(rhs)"
+}
+
+public func ^-^(lhs: DHConstraintScalar, rhs: DHConstraintBuilder) -> DHConstraintBuilder {
+    return "\(lhs)-\(rhs)"
+}
+
+public func ^-^(lhs: DHConstraintScalar, rhs: UIView) -> DHConstraintBuilder {
+    return "\(lhs)-\(rhs)"
+}
+
+public func ^-^(lhs: DHConstraintScalar, rhs: DHConstraintScalar) -> DHConstraintBuilder {
     return "\(lhs)-\(rhs)"
 }
 
@@ -134,13 +150,42 @@ let view2 = UIView()
 view0.addConstraints(view1 ^>=^ 8 ^-^ view2) // view1 is >=8 units away from view2
 ```
 */
-public func ^>=^(lhs: UIView, rhs: DHConstraintScalar) -> DHConstraintBuilder {
+public func ^>=^(lhs: DHConstraintBuilder, rhs: DHConstraintBuilder) -> DHConstraintBuilder {
+    return "\(lhs)->=\(rhs)"
+}
+
+public func ^>=^(lhs: DHConstraintBuilder, rhs: DHConstraintScalar) -> DHConstraintBuilder {
+    return "\(lhs)->=\(rhs)"
+}
+
+public func ^>=^(lhs: DHConstraintBuilder, rhs: UIView) -> DHConstraintBuilder {
+    return "\(lhs)->=\(rhs)"
+}
+
+public func ^>=^(lhs: DHConstraintScalar, rhs: DHConstraintBuilder) -> DHConstraintBuilder {
+    return "\(lhs)->=\(rhs)"
+}
+
+public func ^>=^(lhs: DHConstraintScalar, rhs: DHConstraintScalar) -> DHConstraintBuilder {
+    return "\(lhs)->=\(rhs)"
+}
+
+public func ^>=^(lhs: DHConstraintScalar, rhs: UIView) -> DHConstraintBuilder {
     return "\(lhs)->=\(rhs)"
 }
 
 public func ^>=^(lhs: UIView, rhs: DHConstraintBuilder) -> DHConstraintBuilder {
     return "\(lhs)->=\(rhs)"
 }
+
+public func ^>=^(lhs: UIView, rhs: DHConstraintScalar) -> DHConstraintBuilder {
+    return "\(lhs)->=\(rhs)"
+}
+
+public func ^>=^(lhs: UIView, rhs: UIView) -> DHConstraintBuilder {
+    return "\(lhs)->=\(rhs)"
+}
+
 
 /** 
 Short hand for linking 2 DHConstraintBuilder objects with a gap length less than or equal to specified number
@@ -152,11 +197,39 @@ let view2 = UIView()
 view0.addConstraints(view1 ^<=^ 8 ^-^ view2) // view1 is <=8 units away from view2
 ```
 */
-public func ^<=^(lhs: UIView, rhs: DHConstraintScalar) -> DHConstraintBuilder {
+public func ^<=^(lhs: DHConstraintBuilder, rhs: DHConstraintBuilder) -> DHConstraintBuilder {
+    return "\(lhs)-<=\(rhs)"
+}
+
+public func ^<=^(lhs: DHConstraintBuilder, rhs: DHConstraintScalar) -> DHConstraintBuilder {
+    return "\(lhs)-<=\(rhs)"
+}
+
+public func ^<=^(lhs: DHConstraintBuilder, rhs: UIView) -> DHConstraintBuilder {
+    return "\(lhs)-<=\(rhs)"
+}
+
+public func ^<=^(lhs: DHConstraintScalar, rhs: DHConstraintBuilder) -> DHConstraintBuilder {
+    return "\(lhs)-<=\(rhs)"
+}
+
+public func ^<=^(lhs: DHConstraintScalar, rhs: DHConstraintScalar) -> DHConstraintBuilder {
+    return "\(lhs)-<=\(rhs)"
+}
+
+public func ^<=^(lhs: DHConstraintScalar, rhs: UIView) -> DHConstraintBuilder {
     return "\(lhs)-<=\(rhs)"
 }
 
 public func ^<=^(lhs: UIView, rhs: DHConstraintBuilder) -> DHConstraintBuilder {
+    return "\(lhs)-<=\(rhs)"
+}
+
+public func ^<=^(lhs: UIView, rhs: DHConstraintScalar) -> DHConstraintBuilder {
+    return "\(lhs)-<=\(rhs)"
+}
+
+public func ^<=^(lhs: UIView, rhs: UIView) -> DHConstraintBuilder {
     return "\(lhs)-<=\(rhs)"
 }
 
