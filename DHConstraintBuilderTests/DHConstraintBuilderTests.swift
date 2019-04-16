@@ -252,6 +252,15 @@ class DHConstraintBuilderTests: XCTestCase {
 		XCTAssertEqual(sut.viewDict, ["view_0":v0])
 	}
 
+    func testComplexIniqualityConstraint() {
+        let v0 = UIView()
+        let sut = () |-^ 8 ^-^ v0.lengthEqual(to: 25) ^>=^ 8 ^-| ()
+        
+        XCTAssertEqual(sut.constraintString, "|-metric_0@1000-[view_1(==metric_1@1000)]->=metric_2@1000-|")
+        XCTAssertEqual(sut.metricDict as! [String: Int], ["metric_0": 8, "metric_1": 25, "metric_2": 8])
+        XCTAssertEqual(sut.viewDict, ["view_1": v0])
+    }
+    
 	func testDHConstraintBuilderViewLengthToInt() {
 		let v0 = UIView()
 		let L = 5
