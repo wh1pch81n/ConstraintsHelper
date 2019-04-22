@@ -43,8 +43,6 @@ precedencegroup ConstraintBuilder {
 infix operator ^-^ : ConstraintBuilder
 infix operator |-^ : ConstraintBuilder
 infix operator ^-| : ConstraintBuilder
-infix operator ^>=^ : ConstraintBuilder
-infix operator ^<=^ : ConstraintBuilder
 
 /** 
 Short hand for linking two DHConstraintBuilder Objects 
@@ -73,11 +71,23 @@ public func ^-^(lhs: DHConstraintBuilder, rhs: DHConstraintScalar) -> DHConstrai
     return "\(lhs)-\(rhs)"
 }
 
+public func ^-^(lhs: UIView, rhs: DHConstraintBuilder) -> DHConstraintBuilder {
+    return "\(lhs)-\(rhs)"
+}
+
 public func ^-^(lhs: UIView, rhs: UIView) -> DHConstraintBuilder {
     return "\(lhs)-\(rhs)"
 }
 
 public func ^-^(lhs: UIView, rhs: DHConstraintScalar) -> DHConstraintBuilder {
+    return "\(lhs)-\(rhs)"
+}
+
+public func ^-^(lhs: DHConstraintScalar, rhs: DHConstraintBuilder) -> DHConstraintBuilder {
+    return "\(lhs)-\(rhs)"
+}
+
+public func ^-^(lhs: DHConstraintScalar, rhs: UIView) -> DHConstraintBuilder {
     return "\(lhs)-\(rhs)"
 }
 
@@ -124,6 +134,15 @@ public func ^-|(lhs: UIView, rhs: (Void)) -> DHConstraintBuilder {
     return "\(lhs)-|"
 }
 
+prefix operator ==
+public prefix func ==(rhs: DHConstraintScalar) -> DHConstraintBuilder {
+    return "==\(rhs)"
+}
+
+public prefix func ==(rhs: DHConstraintBuilder) -> DHConstraintBuilder {
+    return "==\(rhs)"
+}
+
 /** 
 Short hand for linking 2 DHConstraintBuilder objects with a gap length greather or equal to specified number
 
@@ -134,12 +153,13 @@ let view2 = UIView()
 view0.addConstraints(view1 ^>=^ 8 ^-^ view2) // view1 is >=8 units away from view2
 ```
 */
-public func ^>=^(lhs: UIView, rhs: DHConstraintScalar) -> DHConstraintBuilder {
-    return "\(lhs)->=\(rhs)"
+prefix operator >=
+public prefix func >=(rhs: DHConstraintScalar) -> DHConstraintBuilder {
+    return ">=\(rhs)"
 }
 
-public func ^>=^(lhs: UIView, rhs: DHConstraintBuilder) -> DHConstraintBuilder {
-    return "\(lhs)->=\(rhs)"
+public prefix func >=(rhs: DHConstraintBuilder) -> DHConstraintBuilder {
+    return ">=\(rhs)"
 }
 
 /** 
@@ -152,12 +172,13 @@ let view2 = UIView()
 view0.addConstraints(view1 ^<=^ 8 ^-^ view2) // view1 is <=8 units away from view2
 ```
 */
-public func ^<=^(lhs: UIView, rhs: DHConstraintScalar) -> DHConstraintBuilder {
-    return "\(lhs)-<=\(rhs)"
+prefix operator <=
+public prefix func <=(rhs: DHConstraintScalar) -> DHConstraintBuilder {
+    return "<=\(rhs)"
 }
 
-public func ^<=^(lhs: UIView, rhs: DHConstraintBuilder) -> DHConstraintBuilder {
-    return "\(lhs)-<=\(rhs)"
+public prefix func <=(rhs: DHConstraintBuilder) -> DHConstraintBuilder {
+    return "<=\(rhs)"
 }
 
 public protocol DHConstraintScalar {}

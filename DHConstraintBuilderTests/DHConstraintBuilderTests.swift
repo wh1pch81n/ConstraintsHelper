@@ -252,6 +252,15 @@ class DHConstraintBuilderTests: XCTestCase {
 		XCTAssertEqual(sut.viewDict, ["view_0":v0])
 	}
 
+    func testComplexIniqualityConstraint() {
+        let v0 = UIView()
+        let sut = () |-^ 8 ^-^ v0.lengthEqual(to: 25) ^-^ >=8 ^-| ()
+        
+        XCTAssertEqual(sut.constraintString, "|-metric_0@1000-[view_1(==metric_1@1000)]->=metric_2@1000-|")
+        XCTAssertEqual(sut.metricDict as! [String: Int], ["metric_0": 8, "metric_1": 25, "metric_2": 8])
+        XCTAssertEqual(sut.viewDict, ["view_1": v0])
+    }
+    
 	func testDHConstraintBuilderViewLengthToInt() {
 		let v0 = UIView()
 		let L = 5
@@ -303,22 +312,22 @@ class DHConstraintBuilderTests: XCTestCase {
 		let v0 = UIView()
 		let L0 = 5
 		let relation = ">="
-		let sut = v0 ^>=^ L0
+		let sut = v0 ^-^ >=L0
 		
-		XCTAssertEqual(sut.constraintString, "[view_0]-\(relation)metric_1@1000")
-		XCTAssertEqual(sut.metricDict["metric_1"] as! Int, L0)
-		XCTAssertEqual(sut.viewDict, ["view_0":v0])
+		XCTAssertEqual(sut.constraintString, "[view_1]-\(relation)metric_0@1000")
+		XCTAssertEqual(sut.metricDict["metric_0"] as! Int, L0)
+		XCTAssertEqual(sut.viewDict, ["view_1":v0])
 	}
 
 	func testViewToGreaterThanOrEqualFloatLength() {
 		let v0 = UIView()
 		let L0 = 5.6
 		let relation = ">="
-		let sut = v0 ^>=^ L0
+		let sut = v0 ^-^ >=L0
 		
-		XCTAssertEqual(sut.constraintString, "[view_0]-\(relation)metric_1@1000")
-		XCTAssertEqual(sut.metricDict["metric_1"] as! Double, L0)
-		XCTAssertEqual(sut.viewDict, ["view_0":v0])
+		XCTAssertEqual(sut.constraintString, "[view_1]-\(relation)metric_0@1000")
+		XCTAssertEqual(sut.metricDict["metric_0"] as! Double, L0)
+		XCTAssertEqual(sut.viewDict, ["view_1":v0])
 	}
 	
 	func testViewToGreaterThanOrEqualFloatLengthWithPriority() {
@@ -326,7 +335,7 @@ class DHConstraintBuilderTests: XCTestCase {
 		let L0 = 5.6
 		let P = 999
 		let relation = ">="
-		let sut = v0 ^>=^ L0.priority(P)
+		let sut = v0 ^-^ >=L0.priority(P)
 		
 		XCTAssertEqual(sut.constraintString, "[view_1]-\(relation)metric_0@\(P)")
 		XCTAssertEqual(sut.metricDict as! [String:Double], ["metric_0":L0])
@@ -338,7 +347,7 @@ class DHConstraintBuilderTests: XCTestCase {
 		let L0 = 5
 		let P = 999
 		let relation = ">="
-		let sut = v0 ^>=^ L0.priority(P)
+		let sut = v0 ^-^ >=L0.priority(P)
 		
 		XCTAssertEqual(sut.constraintString, "[view_1]-\(relation)metric_0@\(P)")
 		XCTAssertEqual(sut.metricDict as! [String:Int], ["metric_0":L0])
@@ -349,22 +358,22 @@ class DHConstraintBuilderTests: XCTestCase {
 		let v0 = UIView()
 		let L0 = 5
 		let relation = "<="
-		let sut = v0 ^<=^ L0
+		let sut = v0 ^-^ <=L0
 		
-		XCTAssertEqual(sut.constraintString, "[view_0]-\(relation)metric_1@1000")
-		XCTAssertEqual(sut.metricDict as! [String:Int], ["metric_1": L0])
-		XCTAssertEqual(sut.viewDict, ["view_0":v0])
+		XCTAssertEqual(sut.constraintString, "[view_1]-\(relation)metric_0@1000")
+		XCTAssertEqual(sut.metricDict as! [String:Int], ["metric_0": L0])
+		XCTAssertEqual(sut.viewDict, ["view_1":v0])
 	}
 	
 	func testViewToLessThanOrEqualFloatLength() {
 		let v0 = UIView()
 		let L0 = 5.6
 		let relation = "<="
-		let sut = v0 ^<=^ L0
+		let sut = v0 ^-^ <=L0
 		
-		XCTAssertEqual(sut.constraintString, "[view_0]-\(relation)metric_1@1000")
-		XCTAssertEqual(sut.metricDict["metric_1"] as! Double, L0)
-		XCTAssertEqual(sut.viewDict, ["view_0":v0])
+		XCTAssertEqual(sut.constraintString, "[view_1]-\(relation)metric_0@1000")
+		XCTAssertEqual(sut.metricDict["metric_0"] as! Double, L0)
+		XCTAssertEqual(sut.viewDict, ["view_1": v0])
 	}
 	
 	func testViewToLessThanOrEqualFloatLengthWithPriority() {
@@ -372,7 +381,7 @@ class DHConstraintBuilderTests: XCTestCase {
 		let L0 = 5.6
 		let P = 999
 		let relation = "<="
-		let sut = v0 ^<=^ L0.priority(P)
+		let sut = v0 ^-^ <=L0.priority(P)
 		
 		XCTAssertEqual(sut.constraintString, "[view_1]-\(relation)metric_0@\(P)")
 		XCTAssertEqual(sut.metricDict as! [String:Double], ["metric_0":L0])
@@ -384,7 +393,7 @@ class DHConstraintBuilderTests: XCTestCase {
 		let L0 = 5
 		let P = 999
 		let relation = "<="
-		let sut = v0 ^<=^ L0.priority(P)
+		let sut = v0 ^-^ <=L0.priority(P)
 		
 		XCTAssertEqual(sut.constraintString, "[view_1]-\(relation)metric_0@\(P)")
 		XCTAssertEqual(sut.metricDict as! [String:Int], ["metric_0":L0])
@@ -490,5 +499,69 @@ class DHConstraintBuilderTests: XCTestCase {
 		XCTAssertEqual(v0.frame, CGRect(x: 0, y: 0, width: 100, height: 100))
 		XCTAssertEqual(v1.frame, CGRect(x: 0, y: 0, width: 45, height: 100))
 		XCTAssertEqual(v2.frame, CGRect(x: 55, y: 0, width: 45, height: 100))
-	}	
+	}
+    
+    func testFormatString_overloadedOperators() {
+        let dummyView = UIView()
+        testFormat(input: "|-5", output: "|-5", block: { XCTAssertEqual($0, $1) })
+
+        testFormat(input: () |-^ 5, output: "|-metric_0@1000", block: { XCTAssertEqual($0, $1) })
+        testFormat(input: () |-^ 1.23, output: "|-metric_0@1000", block: { XCTAssertEqual($0, $1) })
+        testFormat(input: () |-^ dummyView, output: "|-[view_0]", block: { XCTAssertEqual($0, $1) })
+        testFormat(input: () |-^ <=5, output: "|-<=metric_0@1000", block: { XCTAssertEqual($0, $1) })
+        testFormat(input: () |-^ >=5, output: "|->=metric_0@1000", block: { XCTAssertEqual($0, $1) })
+        testFormat(input: () |-^ >=5.priority(999), output: "|->=metric_0@999", block: { XCTAssertEqual($0, $1) })
+        testFormat(input: () |-^ <=5.priority(999), output: "|-<=metric_0@999", block: { XCTAssertEqual($0, $1) })
+        testFormat(input: () |-^ ==5.6, output: "|-==metric_0@1000", block: { XCTAssertEqual($0, $1) })
+        testFormat(input: () |-^ <=5.6, output: "|-<=metric_0@1000", block: { XCTAssertEqual($0, $1) })
+        testFormat(input: () |-^ >=5.6, output: "|->=metric_0@1000", block: { XCTAssertEqual($0, $1) })
+        
+        testFormat(input: 5 ^-| (), output: "metric_0@1000-|", block: { XCTAssertEqual($0, $1) })
+        testFormat(input: 1.23 ^-| (), output: "metric_0@1000-|", block: { XCTAssertEqual($0, $1) })
+        testFormat(input: dummyView ^-| (), output: "[view_0]-|", block: { XCTAssertEqual($0, $1) })
+        testFormat(input: ==5 ^-| (), output: "==metric_0@1000-|", block: { XCTAssertEqual($0, $1) })
+        testFormat(input: <=5 ^-| (), output: "<=metric_0@1000-|", block: { XCTAssertEqual($0, $1) })
+        testFormat(input: >=5 ^-| (), output: ">=metric_0@1000-|", block: { XCTAssertEqual($0, $1) })
+        testFormat(input: ==5.priority(999) ^-| (), output: "==metric_0@999-|", block: { XCTAssertEqual($0, $1) })
+        testFormat(input: >=5.priority(999) ^-| (), output: ">=metric_0@999-|", block: { XCTAssertEqual($0, $1) })
+        testFormat(input: >=5.9.priority(999) ^-| (), output: ">=metric_0@999-|", block: { XCTAssertEqual($0, $1) })
+        
+        testFormat(input: 5.9 ^-^ dummyView, output: "metric_0@1000-[view_1]", block: { XCTAssertEqual($0, $1) })
+        testFormat(input: 5.9 ^-^ dummyView.lengthEqual(to: 5), output: "metric_1@1000-[view_0(==metric_0@1000)]", block: { XCTAssertEqual($0, $1) })
+        testFormat(input: 5.9 ^-^ dummyView.lengthGreaterThanOrEqual(to: 5, priority: 1), output: "metric_1@1000-[view_0(>=metric_0@1)]", block: { XCTAssertEqual($0, $1) })
+        testFormat(input: 5.9 ^-^ dummyView.lengthLessThanOrEqual(to: 5, priority: 1), output: "metric_1@1000-[view_0(<=metric_0@1)]", block: { XCTAssertEqual($0, $1) })
+        
+        testFormat(input: () |-^ dummyView ^-| (), output: "|-[view_0]-|", block: { XCTAssertEqual($0, $1) })
+        testFormat(input: () |-^ dummyView ^-^ 9 ^-| (), output: "|-[view_0]-metric_1@1000-|", block: { XCTAssertEqual($0, $1) })
+        testFormat(input: () |-^ 9 ^-^ dummyView ^-| (), output: "|-metric_0@1000-[view_1]-|", block: { XCTAssertEqual($0, $1) })
+        testFormat(input: () |-^ dummyView ^-^ 5.5 ^-| (), output: "|-[view_0]-metric_1@1000-|", block: { XCTAssertEqual($0, $1) })
+        testFormat(input: () |-^ 1.2 ^-^ dummyView ^-| (), output: "|-metric_0@1000-[view_1]-|", block: { XCTAssertEqual($0, $1) })
+        
+        testFormat(input: () |-^ dummyView ^-^ >=9 ^-| (), output: "|-[view_0]->=metric_1@1000-|", block: { XCTAssertEqual($0, $1) })
+        testFormat(input: () |-^ >=9 ^-^ dummyView ^-| (), output: "|->=metric_0@1000-[view_1]-|", block: { XCTAssertEqual($0, $1) })
+        
+        testFormat(input: () |-^ dummyView ^-^ >=9.priority(999) ^-| (), output: "|-[view_0]->=metric_1@999-|", block: { XCTAssertEqual($0, $1) })
+        testFormat(input: () |-^ >=9.priority(5) ^-^ dummyView ^-| (), output: "|->=metric_0@5-[view_1]-|", block: { XCTAssertEqual($0, $1) })
+        
+        testFormat(input: dummyView.lengthEqual(to: 4), output: "[view_0(==metric_0@1000)]", block: { XCTAssertEqual($0, $1) })
+        testFormat(input: dummyView.lengthGreaterThanOrEqual(to: 5), output: "[view_0(>=metric_0@1000)]", block: { XCTAssertEqual($0, $1) })
+        testFormat(input: dummyView.lengthLessThanOrEqual(to: 6), output: "[view_0(<=metric_0@1000)]", block: { XCTAssertEqual($0, $1) })
+        
+        testFormat(input: dummyView.lengthEqual(to: 4.5), output: "[view_0(==metric_0@1000)]", block: { XCTAssertEqual($0, $1) })
+        testFormat(input: dummyView.lengthGreaterThanOrEqual(to: 5.6), output: "[view_0(>=metric_0@1000)]", block: { XCTAssertEqual($0, $1) })
+        testFormat(input: dummyView.lengthLessThanOrEqual(to: 6.7), output: "[view_0(<=metric_0@1000)]", block: { XCTAssertEqual($0, $1) })
+        testFormat(input: dummyView.lengthEqual(to: UIView()), output: "[view_0(==viewR_1@1000)]", block: { XCTAssertEqual($0, $1) })
+        
+        testFormat(input: () |-^ 8 ^-^ dummyView.lengthEqual(to: 25) ^-^ >=8 ^-| (), output: "|-metric_0@1000-[view_1(==metric_1@1000)]->=metric_2@1000-|",
+                   block: { XCTAssertEqual($0, $1) })
+        testFormat(input: () |-^ 8 ^-^ dummyView.lengthEqual(to: 25) ^-^ >=8.priority(998) ^-| (), output: "|-metric_0@1000-[view_1(==metric_1@1000)]->=metric_2@998-|",
+                   block: { XCTAssertEqual($0, $1) })
+    }
+}
+
+extension DHConstraintBuilderTests {
+    func testFormat(input: @autoclosure () -> DHConstraintBuilder, output: String, block: (String, String) -> ()) {
+        block(input().constraintString, output)
+        DHConstraintBuilder.__.count = 0
+    }
 }
